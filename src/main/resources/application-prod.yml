@@ -1,0 +1,20 @@
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://${spring.datasource.url}:3306/doit?allowPublicKeyRetrieval=trueuseSSL=false&serverTimezone=Asia/Seoul&characterEncoding=UTF-8
+    username: ${spring.datasource.username}
+    password: ${spring.datasource.password}
+
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.H2Dialect
+        format_sql: false
+        show_sql: false
+
+logging:
+  level:
+    root: info
