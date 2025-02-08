@@ -46,6 +46,7 @@ dependencies {
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.springframework.security:spring-security-test'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+    testRuntimeOnly.exclude group: 'mysql', module: 'mysql-connector-java'
 
     //Security
 //    implementation 'org.springframework.boot:spring-boot-starter-security'
