@@ -1,8 +1,8 @@
 name: doit-CICD
 
-on:
-  push:
-    branches: [ * ]
+on: [push]
+#  push:
+#    branches: [ * ]
 
 env:
   NAME: parkhyuntae
