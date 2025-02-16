@@ -1,4 +1,4 @@
-package com.codeit.side.auth.adapter.in.filter;
+package com.codeit.side.common.adapter.in.filter;
 
 import com.codeit.side.common.adapter.out.security.CustomUserDetails;
 import com.codeit.side.common.util.JwtUtil;

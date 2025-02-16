@@ -1,6 +1,6 @@
 package com.codeit.side.common.config;
 
-import com.codeit.side.auth.adapter.in.filter.LoginFilter;
+import com.codeit.side.common.adapter.in.filter.LoginFilter;
 import com.codeit.side.common.util.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
