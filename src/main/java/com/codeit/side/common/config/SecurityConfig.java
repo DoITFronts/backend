@@ -15,11 +15,18 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+
+import java.util.Collections;
+import java.util.List;
 
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
 public class SecurityConfig {
+    private static final List<String> ALLOWED_ORIGINS = List.of("http://localhost:3000", "https://doitz.netlify.app/", "https://calit.netlify.app/");
+    private static final List<String> ALLOWED_METHODS = List.of("GET", "POST", "PUT", "DELETE");
+
     private final AuthenticationConfiguration authenticationConfiguration;
     private final JwtUtil jwtUtil;
 
@@ -50,6 +57,18 @@ public class SecurityConfig {
         http.addFilterAfter(new LoginFilter(authenticationManager(authenticationConfiguration), jwtUtil), UsernamePasswordAuthenticationFilter.class);
         http.sessionManagement(session -> session
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+
+        http.cors(corsCustomizer -> corsCustomizer.configurationSource(request -> {
+            CorsConfiguration corsConfiguration = new CorsConfiguration();
+
+            corsConfiguration.setAllowedOrigins(ALLOWED_ORIGINS);
+            corsConfiguration.setAllowedMethods(ALLOWED_METHODS);
+            corsConfiguration.setAllowCredentials(true);
+            corsConfiguration.setAllowedHeaders(Collections.singletonList("*"));
+            corsConfiguration.setMaxAge(3600L);
+
+            return corsConfiguration;
+        }));
 
         return http.build();
     }
