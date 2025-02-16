@@ -3,6 +3,7 @@ package com.codeit.side.common.adapter;
 import com.codeit.side.common.adapter.exception.BusinessException;
 import com.codeit.side.common.adapter.exception.EmailAlreadyExistsException;
 import com.codeit.side.common.adapter.exception.ErrorCode;
+import com.codeit.side.common.adapter.exception.UserNotFoundException;
 import com.codeit.side.common.adapter.response.ExceptionResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
@@ -16,7 +17,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 public class ExceptionController {
     @ExceptionHandler(BusinessException.class)
     public ResponseEntity<ExceptionResponse> businessExceptionHandler(HttpServletRequest request, BusinessException e) {
-        ErrorCode errorCode = e.errorCode;
+        ErrorCode errorCode = e.getErrorCode();
 
         log.error("Request URL: {}, Error Message: {}", request.getRequestURL(), e.getMessage());
 
@@ -26,7 +27,7 @@ public class ExceptionController {
 
     @ExceptionHandler(EmailAlreadyExistsException.class)
     public ResponseEntity<ExceptionResponse> emailAlreadyExistsExceptionHandler(HttpServletRequest request, EmailAlreadyExistsException e) {
-        ErrorCode errorCode = e.errorCode;
+        ErrorCode errorCode = e.getErrorCode();
 
         log.error("Request URL: {}, Error Message: {}", request.getRequestURL(), e.getMessage());
 
@@ -46,5 +47,15 @@ public class ExceptionController {
 
         return ResponseEntity.status(errorCode.getStatusCode())
                 .body(new ExceptionResponse(errorCode.getCode(), defaultMessage));
+    }
+
+    @ExceptionHandler(UserNotFoundException.class)
+    public ResponseEntity<ExceptionResponse> userNotFoundExceptionHandler(HttpServletRequest request, UserNotFoundException e) {
+        ErrorCode errorCode = e.getErrorCode();
+
+        log.error("Request URL: {}, Error Message: {}", request.getRequestURL(), e.getMessage());
+
+        return ResponseEntity.status(errorCode.getStatusCode())
+                .body(new ExceptionResponse(errorCode.getCode(), e.getMessage()));
     }
 }

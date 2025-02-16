@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public enum ErrorCode {
     INVALID_INPUT_VALUE(40001, "잘못된 요청 파라미터입니다."),
+    NOT_FOUND(40401, "없는 데이터 입니다."),
     INTERNAL_SERVER_ERROR(50001, "잘못된 요청 파라미터입니다."),
     ;
 
