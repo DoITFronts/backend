@@ -61,7 +61,8 @@ public class SecurityConfig {
 
         http.authorizeHttpRequests(auth -> auth
                 .requestMatchers(WHITE_LIST)
-                .permitAll());
+                .permitAll()
+                .anyRequest().authenticated());
 
         LoginFilter loginFilter = new LoginFilter(authenticationManager(authenticationConfiguration), jwtUtil);
         http.addFilterAfter(loginFilter, UsernamePasswordAuthenticationFilter.class);
