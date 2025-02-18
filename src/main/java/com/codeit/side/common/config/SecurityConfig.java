@@ -10,6 +10,7 @@ import org.springframework.security.config.annotation.authentication.configurati
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.annotation.web.configurers.CorsConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -24,8 +25,18 @@ import java.util.List;
 @EnableWebSecurity
 @RequiredArgsConstructor
 public class SecurityConfig {
-    private static final List<String> ALLOWED_ORIGINS = List.of("http://localhost:3000", "https://doitz.netlify.app/", "https://calit.netlify.app/");
+    private static final List<String> ALLOWED_ORIGINS = List.of(
+            "http://localhost:3000",
+            "http://127.0.0.1:5500",
+            "https://doitz.netlify.app",
+            "https://calit.netlify.app"
+    );
     private static final List<String> ALLOWED_METHODS = List.of("GET", "POST", "PUT", "DELETE");
+    private static final String[] WHITE_LIST = {
+            "/",
+            "/api/v1/login",
+            "/api/v1/join",
+    };
 
     private final AuthenticationConfiguration authenticationConfiguration;
     private final JwtUtil jwtUtil;
@@ -40,36 +51,42 @@ public class SecurityConfig {
         return configuration.getAuthenticationManager();
     }
 
-    public static final String[] WHITE_LIST = {
-            "/",
-            "/api/v1/login",
-            "/api/v1/join",
-    };
-
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.csrf(AbstractHttpConfigurer::disable);
+
         http.formLogin(AbstractHttpConfigurer::disable);
+
         http.httpBasic(AbstractHttpConfigurer::disable);
+
         http.authorizeHttpRequests(auth -> auth
                 .requestMatchers(WHITE_LIST)
                 .permitAll());
-        http.addFilterAfter(new LoginFilter(authenticationManager(authenticationConfiguration), jwtUtil), UsernamePasswordAuthenticationFilter.class);
+
+        LoginFilter loginFilter = new LoginFilter(authenticationManager(authenticationConfiguration), jwtUtil);
+        http.addFilterAfter(loginFilter, UsernamePasswordAuthenticationFilter.class);
+
         http.sessionManagement(session -> session
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
-        http.cors(corsCustomizer -> corsCustomizer.configurationSource(request -> {
-            CorsConfiguration corsConfiguration = new CorsConfiguration();
-
-            corsConfiguration.setAllowedOrigins(ALLOWED_ORIGINS);
-            corsConfiguration.setAllowedMethods(ALLOWED_METHODS);
-            corsConfiguration.setAllowCredentials(true);
-            corsConfiguration.setAllowedHeaders(Collections.singletonList("*"));
-            corsConfiguration.setMaxAge(3600L);
-
-            return corsConfiguration;
-        }));
+        http.cors(this::getHttpSecurityCorsConfigurer);
 
         return http.build();
+    }
+
+    private void getHttpSecurityCorsConfigurer(CorsConfigurer<HttpSecurity> corsCustomizer) {
+        corsCustomizer.configurationSource(request -> getCorsConfiguration());
+    }
+
+    private CorsConfiguration getCorsConfiguration() {
+        CorsConfiguration corsConfiguration = new CorsConfiguration();
+
+        corsConfiguration.setAllowedOrigins(ALLOWED_ORIGINS);
+        corsConfiguration.setAllowedMethods(ALLOWED_METHODS);
+        corsConfiguration.setAllowCredentials(true);
+        corsConfiguration.setAllowedHeaders(Collections.singletonList("*"));
+        corsConfiguration.setMaxAge(3600L);
+
+        return corsConfiguration;
     }
 }

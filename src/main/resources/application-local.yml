@@ -14,9 +14,9 @@ spring:
         show_sql: true
 
   jwt:
-    secret: jwtSecurityKey
+    secret: jwtSecurityKeyjwtSecurityKeyjwtSecurityKey
 
 logging:
   level:
-    root: info
+    root: debug
     org.hibernate.SQL: debug
