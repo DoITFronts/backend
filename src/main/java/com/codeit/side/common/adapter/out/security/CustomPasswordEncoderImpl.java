@@ -8,6 +8,9 @@ import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.util.Base64;
 
+/**
+ * SpringSecurity 의존성을 제외한 password encoder
+ */
 @Component
 public class CustomPasswordEncoderImpl implements CustomPasswordEncoder {
     private static final int SALT_LENGTH = 16;

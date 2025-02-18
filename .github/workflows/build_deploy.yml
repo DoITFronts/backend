@@ -29,6 +29,7 @@ jobs:
           spring.datasource.url: ${{ secrets.RDS_HOST }}
           spring.datasource.username: ${{ secrets.RDS_USERNAME }}
           spring.datasource.password: ${{ secrets.RDS_PASSWORD }}
+          spring.jwt.secret: ${{ secrets.JWT_SECRET }}
 
       - name: Make gradlew executable
         run: chmod +x ./gradlew

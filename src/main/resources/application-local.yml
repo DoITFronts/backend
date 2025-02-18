@@ -13,7 +13,11 @@ spring:
         format_sql: true
         show_sql: true
 
+  jwt:
+    secret: jwtSecurityKeyjwtSecurityKeyjwtSecurityKey
+
 logging:
   level:
-    root: info
+    root: debug
     org.hibernate.SQL: debug
+    org.springframework: DEBUG
