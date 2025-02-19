@@ -2,6 +2,7 @@ package com.codeit.side.common.adapter.in.filter;
 
 import com.codeit.side.common.adapter.out.security.CustomUserDetails;
 import com.codeit.side.common.util.JwtUtil;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -13,6 +14,8 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 public class LoginFilter extends UsernamePasswordAuthenticationFilter {
     private final AuthenticationManager authenticationManager;
@@ -40,8 +43,16 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         String username = customUserDetails.getUsername();
 
         String token = jwtUtil.createJwt(username, 60 * 60 * 10L);
+        Map<String, Object> responseBody = new HashMap<>();
+        responseBody.put("accessToken", "Bearer " + token);
+        // JSON으로 변환
+        ObjectMapper objectMapper = new ObjectMapper();
+        String jsonResponse = objectMapper.writeValueAsString(responseBody);
 
-        response.addHeader("Authorization", "Bearer " + token);
+        // 응답 설정
+        response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
+        response.getWriter().write(jsonResponse);
     }
 
     @Override
