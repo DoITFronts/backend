@@ -30,6 +30,10 @@ jobs:
           spring.datasource.username: ${{ secrets.RDS_USERNAME }}
           spring.datasource.password: ${{ secrets.RDS_PASSWORD }}
           spring.jwt.secret: ${{ secrets.JWT_SECRET }}
+          cloud.aws.region: ${{ secrets.AWS_REGION }}
+          cloud.aws.s3.bucket: ${{ secrets.AWS_S3_BUCKET }}
+          cloud.aws.credentials.access-key: ${{ secrets.AWS_ACCESS_KEY }}
+          cloud.aws.credentials.secret-key: ${{ secrets.AWS_SECRET_KEY }}
 
       - name: Make gradlew executable
         run: chmod +x ./gradlew
