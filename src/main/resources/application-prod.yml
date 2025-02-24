@@ -19,6 +19,18 @@ spring:
     access_expiration: 86400000
     refresh_expiration: 86400000
 
+# AWS S3
+cloud:
+  aws:
+    region: ${cloud.aws.region}
+    s3:
+      bucket: ${cloud.aws.s3.bucket}
+    stack:
+      auto: false
+    credentials:
+      access-key: ${cloud.aws.credentials.access-key}
+      secret-key: ${cloud.aws.credentials.secret-key}
+
 logging:
   level:
     root: info

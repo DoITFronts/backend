@@ -140,5 +140,6 @@ replay_pid*
 # yaml
 #*.yml
 #*.yaml
+application-local.yml
 
 build

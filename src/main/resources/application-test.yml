@@ -23,3 +23,15 @@ spring:
     secret: jwtSecurityKeyjwtSecurityKeyjwtSecurityKey
     access_expiration: 86400000
     refresh_expiration: 86400000
+
+# AWS S3
+cloud:
+  aws:
+    s3:
+      bucket: bucket
+    region: region
+    stack:
+      auto: false
+    credentials:
+      access-key: access-key
+      secret-key: secret-key

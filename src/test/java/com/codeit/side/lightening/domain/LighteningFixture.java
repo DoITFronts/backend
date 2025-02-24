@@ -13,7 +13,8 @@ public class LighteningFixture {
                 Category.ALCOHOL,
                 LocalDateTime.of(2021, 1, 1, 0, 0),
                 LocalDateTime.of(2021, 1, 2, 0, 0),
-                100
+                100,
+                false
         );
     }
 

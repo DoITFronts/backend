@@ -28,7 +28,8 @@ public record LighteningRequest(
                 Category.from(category),
                 targetAt,
                 endAt,
-                capacity
+                capacity,
+                hasImage
         );
     }
 }

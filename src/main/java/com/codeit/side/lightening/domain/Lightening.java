@@ -30,9 +30,10 @@ public class Lightening {
             Category category,
             LocalDateTime targetAt,
             LocalDateTime endAt,
-            Integer capacity
+            Integer capacity,
+            Boolean hasImage
     ){
-        return of(null, title, summary, address, city, town, category, targetAt, endAt, capacity, false);
+        return of(null, title, summary, address, city, town, category, targetAt, endAt, capacity, hasImage);
     }
 
     public static Lightening of(
