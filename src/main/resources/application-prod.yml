@@ -16,6 +16,8 @@ spring:
 
   jwt:
     secret: ${spring.jwt.secret}
+    access_expiration: 86400000
+    refresh_expiration: 86400000
 
 logging:
   level:

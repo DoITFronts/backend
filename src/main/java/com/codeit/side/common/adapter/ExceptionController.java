@@ -1,9 +1,6 @@
 package com.codeit.side.common.adapter;
 
-import com.codeit.side.common.adapter.exception.BusinessException;
-import com.codeit.side.common.adapter.exception.EmailAlreadyExistsException;
-import com.codeit.side.common.adapter.exception.ErrorCode;
-import com.codeit.side.common.adapter.exception.UserNotFoundException;
+import com.codeit.side.common.adapter.exception.*;
 import com.codeit.side.common.adapter.response.ExceptionResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
@@ -57,5 +54,15 @@ public class ExceptionController {
 
         return ResponseEntity.status(errorCode.getStatusCode())
                 .body(new ExceptionResponse(errorCode.getCode(), e.getMessage()));
+    }
+
+    @ExceptionHandler(IllegalRequestException.class)
+    public ResponseEntity<ExceptionResponse> illegalRequestExceptionHandler(HttpServletRequest request, IllegalRequestException e) {
+        ErrorCode errorCode = e.getErrorCode();
+
+        log.error("Request URL: {}, Error Message: {}", request.getRequestURL(), e.getMessage());
+
+        return ResponseEntity.status(errorCode.getStatusCode())
+                .body(new ExceptionResponse(errorCode.getCode(), errorCode.getMessage()));
     }
 }

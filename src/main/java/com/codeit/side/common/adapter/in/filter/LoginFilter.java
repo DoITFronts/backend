@@ -57,7 +57,6 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         String bearer = "Bearer " + token;
 
         response.addHeader("Authorization", bearer);
-
         Map<String, Object> responseBody = new HashMap<>();
         responseBody.put("accessToken", bearer);
 

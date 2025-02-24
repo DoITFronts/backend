@@ -1,5 +1,6 @@
 package com.codeit.side.common.config;
 
+import com.codeit.side.common.adapter.in.filter.JwtAuthenticationFilter;
 import com.codeit.side.common.adapter.in.filter.LoginFilter;
 import com.codeit.side.common.util.JwtUtil;
 import lombok.RequiredArgsConstructor;
@@ -38,6 +39,7 @@ public class SecurityConfig {
             "/api/v1/join",
     };
 
+    private final JwtAuthenticationFilter jwtAuthenticationFilter;
     private final AuthenticationConfiguration authenticationConfiguration;
     private final JwtUtil jwtUtil;
 
@@ -66,6 +68,8 @@ public class SecurityConfig {
 
         LoginFilter loginFilter = new LoginFilter(authenticationManager(authenticationConfiguration), jwtUtil);
         http.addFilterAfter(loginFilter, UsernamePasswordAuthenticationFilter.class);
+
+        http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
         http.sessionManagement(session -> session
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS));

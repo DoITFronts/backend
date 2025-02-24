@@ -2,6 +2,7 @@ package com.codeit.side.common.util;
 
 import io.jsonwebtoken.Jwts;
 import jakarta.annotation.PostConstruct;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -10,6 +11,7 @@ import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
 import java.util.Date;
 
+@Getter
 @Component
 @RequiredArgsConstructor
 public class JwtUtil {
@@ -17,6 +19,12 @@ public class JwtUtil {
 
     @Value("${spring.jwt.secret}")
     private String secret;
+
+    @Value("${spring.jwt.access_expiration}")
+    private long accessExpiration;
+
+    @Value("${spring.jwt.refresh_expiration}")
+    private long refreshExpiration;
 
     @PostConstruct
     public void init() {
@@ -44,7 +52,7 @@ public class JwtUtil {
 
     public String createJwt(String username, Long expiration) {
         return Jwts.builder()
-                .claim("username", username)
+                .claim("sub", username)
                 .issuedAt(new Date(System.currentTimeMillis()))
                 .expiration(new Date(System.currentTimeMillis() + expiration))
                 .signWith(secretKey)
