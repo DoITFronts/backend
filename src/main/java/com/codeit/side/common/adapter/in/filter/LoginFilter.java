@@ -42,7 +42,7 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         CustomUserDetails customUserDetails = (CustomUserDetails) authResult.getPrincipal();
         String username = customUserDetails.getUsername();
 
-        String token = jwtUtil.createJwt(username, 60 * 60 * 10L);
+        String token = jwtUtil.createJwt(username, 60 * 60 * 60L);
         Map<String, Object> responseBody = new HashMap<>();
         responseBody.put("accessToken", "Bearer " + token);
         // JSON으로 변환

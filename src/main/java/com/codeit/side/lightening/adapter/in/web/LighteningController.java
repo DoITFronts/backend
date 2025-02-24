@@ -1,9 +1,12 @@
 package com.codeit.side.lightening.adapter.in.web;
 
 import com.codeit.side.lightening.adapter.in.web.request.LighteningRequest;
+import com.codeit.side.lightening.adapter.in.web.response.CreateLighteningResponse;
 import com.codeit.side.lightening.application.port.in.LighteningUseCase;
+import com.codeit.side.lightening.domain.Lightening;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -18,11 +21,14 @@ public class LighteningController {
     private final LighteningUseCase lighteningUseCase;
 
     @PostMapping
-    public String create(@RequestPart MultipartFile image, @Valid  @RequestPart LighteningRequest lightening) {
+    public ResponseEntity<CreateLighteningResponse> create(
+            @RequestPart MultipartFile image,
+            @Valid @RequestPart(name = "lightening") LighteningRequest lighteningRequest
+    ) {
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
-        System.out.println("email = " + email);
-//        lighteningUseCase.save(lightening.toModel(hasImage(image)));
-        return email;
+        Lightening lighteningModel = lighteningRequest.toModel(hasImage(image));
+        Lightening savedLightening = lighteningUseCase.save(email, lighteningModel);
+        return ResponseEntity.ok(CreateLighteningResponse.from(savedLightening.getId()));
     }
 
     private boolean hasImage(MultipartFile image) {

@@ -3,14 +3,8 @@ package com.codeit.side.lightening.adapter.out.persistence.entity;
 import com.codeit.side.common.adapter.out.persistence.entity.BaseEntity;
 import com.codeit.side.lightening.domain.Category;
 import com.codeit.side.lightening.domain.Lightening;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.NoArgsConstructor;
+import jakarta.persistence.*;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
@@ -22,6 +16,7 @@ import java.time.LocalDateTime;
 public class LighteningEntity extends BaseEntity {
     @Id
     @Column(name = "id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(name = "title", nullable = false)
@@ -42,6 +37,7 @@ public class LighteningEntity extends BaseEntity {
     @Column(name = "town", nullable = false)
     private String town;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "category", nullable = false)
     private Category category;
 
