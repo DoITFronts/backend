@@ -60,6 +60,21 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         Map<String, Object> responseBody = new HashMap<>();
         responseBody.put("accessToken", bearer);
 
+        createResponseBody(response, responseBody);
+    }
+
+    @Override
+    protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, AuthenticationException failed) throws IOException, ServletException {
+        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+
+        System.out.println("failed = " + failed.getMessage());
+
+        Map<String, Object> responseBody = new HashMap<>();
+        responseBody.put("mesaqge", "username 혹은 password가 잘못되었습니다.");
+        createResponseBody(response, responseBody);
+    }
+
+    private void createResponseBody(HttpServletResponse response, Map<String, Object> responseBody) {
         try {
             ObjectMapper objectMapper = new ObjectMapper();
             String jsonResponse = objectMapper.writeValueAsString(responseBody);
@@ -70,10 +85,5 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         } catch (IOException e) {
             log.error("JWT token 응답값 생성에 실패했습니다.", e);
         }
-    }
-
-    @Override
-    protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, AuthenticationException failed) throws IOException, ServletException {
-        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
     }
 }
