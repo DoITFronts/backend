@@ -21,7 +21,7 @@ import java.util.Map;
 
 @Slf4j
 public class LoginFilter extends UsernamePasswordAuthenticationFilter {
-    private final long EXPIRATION = Duration.ofHours(1).toMillis();
+    private final long EXPIRATION = Duration.ofDays(1).toMillis();
 
     private final AuthenticationManager authenticationManager;
     private final JwtUtil jwtUtil;
