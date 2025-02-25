@@ -4,7 +4,6 @@ import com.codeit.side.lightening.adapter.out.persistence.entity.LighteningEntit
 import com.codeit.side.lightening.adapter.out.persistence.entity.LighteningLikeEntity;
 import com.codeit.side.lightening.adapter.out.persistence.jpa.LighteningJpaEntityRepository;
 import com.codeit.side.lightening.adapter.out.persistence.jpa.LighteningLikeJpaEntityRepository;
-import com.codeit.side.lightening.adapter.out.persistence.jpa.LighteningLikeQueryRepository;
 import com.codeit.side.lightening.application.port.out.LighteningCommandRepository;
 import com.codeit.side.lightening.domain.Lightening;
 import lombok.RequiredArgsConstructor;
@@ -16,7 +15,6 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class LighteningCommandRepositoryImpl implements LighteningCommandRepository {
     private final LighteningJpaEntityRepository lighteningJpaEntityRepository;
-    private final LighteningLikeQueryRepository lighteningLikeQueryRepository;
     private final LighteningLikeJpaEntityRepository lighteningLikeJpaEntityRepository;
 
     @Override

@@ -18,7 +18,7 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/lightening")
+@RequestMapping("/api/v1/lightenings")
 public class LighteningController {
     private static final List<String> VALID_EXTENSIONS = List.of("jpg", "jpeg", "gif");
     private static final Long MAX_IMAGE_MB_SIZE = 5L;
@@ -37,7 +37,7 @@ public class LighteningController {
         return ResponseEntity.ok(CreateLighteningResponse.from(savedLightening.getId()));
     }
 
-    @PostMapping("/{id}/likes")
+    @PostMapping("/{id}/like")
     public ResponseEntity<Void> like(@PathVariable Long id) {
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
         if ("anonymousUser".equals(email)) {
