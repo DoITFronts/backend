@@ -63,6 +63,6 @@ public class ExceptionController {
         log.error("Request URL: {}, Error Message: {}", request.getRequestURL(), e.getMessage());
 
         return ResponseEntity.status(errorCode.getStatusCode())
-                .body(new ExceptionResponse(errorCode.getCode(), errorCode.getMessage()));
+                .body(new ExceptionResponse(errorCode.getCode(), e.getMessage()));
     }
 }
