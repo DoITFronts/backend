@@ -5,4 +5,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 public interface LighteningUseCase {
     Lightening save(String email, Lightening lightening, MultipartFile image);
+
+    void like(String email, Long id);
 }

@@ -1,5 +1,6 @@
 package com.codeit.side.lightening.adapter.in.web;
 
+import com.codeit.side.common.adapter.exception.AuthenticationFailedException;
 import com.codeit.side.common.adapter.exception.IllegalRequestException;
 import com.codeit.side.lightening.adapter.in.web.request.LighteningRequest;
 import com.codeit.side.lightening.adapter.in.web.response.CreateLighteningResponse;
@@ -10,10 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestPart;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
@@ -29,7 +27,7 @@ public class LighteningController {
 
     @PostMapping
     public ResponseEntity<CreateLighteningResponse> create(
-            @RequestPart MultipartFile image,
+            @RequestPart(required = false) MultipartFile image,
             @Valid @RequestPart(name = "lightening") LighteningRequest lighteningRequest
     ) {
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
@@ -37,6 +35,16 @@ public class LighteningController {
         Lightening lighteningModel = lighteningRequest.toModel(hasImage(image));
         Lightening savedLightening = lighteningUseCase.save(email, lighteningModel, image);
         return ResponseEntity.ok(CreateLighteningResponse.from(savedLightening.getId()));
+    }
+
+    @PostMapping("/{id}/likes")
+    public ResponseEntity<Void> like(@PathVariable Long id) {
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+        if ("anonymousUser".equals(email)) {
+            throw new AuthenticationFailedException("로그인이 필요합니다.");
+        }
+        lighteningUseCase.like(email, id);
+        return ResponseEntity.ok().build();
     }
 
     private boolean hasImage(MultipartFile image) {
