@@ -20,4 +20,9 @@ public class FakeLighteningCommandRepository implements LighteningCommandReposit
         lightenings.add(save);
         return save;
     }
+
+    @Override
+    public void like(String email, Long id) {
+
+    }
 }
