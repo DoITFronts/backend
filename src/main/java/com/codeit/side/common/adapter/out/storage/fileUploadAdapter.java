@@ -22,9 +22,9 @@ public class fileUploadAdapter implements FileUploadOutputPort {
     private String bucket;
     private final AmazonS3 amazonS3;
 
-    public String uploadImageToS3(MultipartFile file, String path, String fileName, String extension) {
+    public void uploadImageToS3(MultipartFile file, String path, String fileName, String extension) {
         if (file == null || file.isEmpty()) {
-            return null;
+            return;
         }
         try {
             InputStream is = file.getInputStream();
@@ -47,6 +47,6 @@ public class fileUploadAdapter implements FileUploadOutputPort {
             e.printStackTrace();
             throw new AmazonS3Exception("Failed to upload image to S3");
         }
-        return null;
+        return;
     }
 }

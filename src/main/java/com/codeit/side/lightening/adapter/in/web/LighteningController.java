@@ -20,7 +20,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/lightenings")
 public class LighteningController {
-    private static final List<String> VALID_EXTENSIONS = List.of("jpg", "jpeg", "gif");
+    private static final List<String> VALID_EXTENSIONS = List.of("jpg", "jpeg", "gif", "png");
     private static final Long MAX_IMAGE_MB_SIZE = 5L;
 
     private final LighteningUseCase lighteningUseCase;

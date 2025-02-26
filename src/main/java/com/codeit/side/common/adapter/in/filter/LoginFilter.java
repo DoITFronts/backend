@@ -21,7 +21,7 @@ import java.util.Map;
 
 @Slf4j
 public class LoginFilter extends UsernamePasswordAuthenticationFilter {
-    private final long EXPIRATION = Duration.ofDays(1).toMillis();
+    private final long EXPIRATION = Duration.ofHours(24).toMillis();
 
     private final AuthenticationManager authenticationManager;
     private final JwtUtil jwtUtil;
@@ -67,8 +67,6 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
     @Override
     protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, AuthenticationException failed) throws IOException, ServletException {
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-
-        System.out.println("failed = " + failed.getMessage());
 
         Map<String, Object> responseBody = new HashMap<>();
         responseBody.put("mesaqge", "username 혹은 password가 잘못되었습니다.");
