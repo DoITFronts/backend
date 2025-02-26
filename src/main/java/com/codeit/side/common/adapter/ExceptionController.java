@@ -65,4 +65,14 @@ public class ExceptionController {
         return ResponseEntity.status(errorCode.getStatusCode())
                 .body(new ExceptionResponse(errorCode.getCode(), e.getMessage()));
     }
+
+    @ExceptionHandler(UserAlreadyJoinedException.class)
+    public ResponseEntity<ExceptionResponse> userAlreadyJoinedExceptionHandler(HttpServletRequest request, UserAlreadyJoinedException e) {
+        ErrorCode errorCode = e.getErrorCode();
+
+        log.error("Request URL: {}, Error Message: {}", request.getRequestURL(), e.getMessage());
+
+        return ResponseEntity.status(errorCode.getStatusCode())
+                .body(new ExceptionResponse(errorCode.getCode(), errorCode.getMessage()));
+    }
 }
