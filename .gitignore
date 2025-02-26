@@ -30,6 +30,31 @@
 # Gradle
 .idea/**/gradle.xml
 .idea/**/libraries
+# Created by https://www.toptal.com/developers/gitignore/api/gradle
+# Edit at https://www.toptal.com/developers/gitignore?templates=gradle
+
+### Gradle ###
+.gradle
+**/build/
+!src/**/build/
+
+# Ignore Gradle GUI config
+gradle-app.setting
+
+# Cache of project
+.gradletasknamecache
+
+# Eclipse Gradle plugin generated files
+# Eclipse Core
+.project
+# JDT-specific (Eclipse Java Development Tools)
+.classpath
+
+### Gradle Patch ###
+# Java heap dump
+*.hprof
+
+# End of https://www.toptal.com/developers/gitignore/api/gradle
 
 # Gradle and Maven with auto-import
 # When using Gradle or Maven with auto-import, you should exclude module files,
@@ -52,9 +77,6 @@ cmake-build-*/
 
 # File-based project format
 *.iws
-
-# IntelliJ
-out/
 
 # mpeltonen/sbt-idea plugin
 .idea_modules/
@@ -103,7 +125,7 @@ fabric.properties
 .mtj.tmp/
 
 # Package Files #
-*.jar
+*.jar !gradle-wrapper.jar
 *.war
 *.nar
 *.ear
@@ -116,7 +138,8 @@ hs_err_pid*
 replay_pid*
 
 # yaml
-*.yml
-*.yaml
+#*.yml
+#*.yaml
+application-local.yml
 
 build
