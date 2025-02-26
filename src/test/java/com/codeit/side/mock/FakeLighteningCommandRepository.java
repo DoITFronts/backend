@@ -30,4 +30,9 @@ public class FakeLighteningCommandRepository implements LighteningCommandReposit
     public void join(String email, Long id) {
 
     }
+
+    @Override
+    public void leave(String email, Long id) {
+
+    }
 }
