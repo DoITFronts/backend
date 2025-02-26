@@ -7,4 +7,8 @@ public interface LighteningUseCase {
     Lightening save(String email, Lightening lightening, MultipartFile image);
 
     void like(String email, Long id);
+
+    void join(String email, Long id);
+
+    void leave(String email, Long id);
 }

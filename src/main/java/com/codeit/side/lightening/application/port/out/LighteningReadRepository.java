@@ -4,4 +4,6 @@ import com.codeit.side.lightening.domain.Lightening;
 
 public interface LighteningReadRepository {
     Lightening getById(Long lighteningId);
+
+    boolean isJoined(String email, Long lighteningId);
 }

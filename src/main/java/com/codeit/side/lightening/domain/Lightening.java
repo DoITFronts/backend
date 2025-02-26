@@ -52,4 +52,7 @@ public class Lightening {
         return new Lightening(id, title, summary, address, city, town, category, targetAt, endAt, capacity, hasImage);
     }
 
+    public boolean isNotJoinable(int currentMemberCount) {
+        return capacity <= currentMemberCount;
+    }
 }

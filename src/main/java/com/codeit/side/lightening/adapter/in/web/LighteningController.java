@@ -39,12 +39,34 @@ public class LighteningController {
 
     @PostMapping("/{id}/like")
     public ResponseEntity<Void> like(@PathVariable Long id) {
+        String email = getName();
+        lighteningUseCase.like(email, id);
+        return ResponseEntity.ok()
+                .build();
+    }
+
+    @PostMapping("/{id}/join")
+    public ResponseEntity<Void> join(@PathVariable Long id) {
+        String email = getName();
+        lighteningUseCase.join(email, id);
+        return ResponseEntity.ok()
+                .build();
+    }
+
+    @DeleteMapping("/{id}/join")
+    public ResponseEntity<Void> leave(@PathVariable Long id) {
+        String email = getName();
+        lighteningUseCase.leave(email, id);
+        return ResponseEntity.ok()
+                .build();
+    }
+
+    private String getName() {
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
         if ("anonymousUser".equals(email)) {
             throw new AuthenticationFailedException("로그인이 필요합니다.");
         }
-        lighteningUseCase.like(email, id);
-        return ResponseEntity.ok().build();
+        return email;
     }
 
     private boolean hasImage(MultipartFile image) {

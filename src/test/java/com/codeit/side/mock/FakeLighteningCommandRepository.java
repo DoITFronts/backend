@@ -25,4 +25,14 @@ public class FakeLighteningCommandRepository implements LighteningCommandReposit
     public void like(String email, Long id) {
 
     }
+
+    @Override
+    public void join(String email, Long id) {
+
+    }
+
+    @Override
+    public void leave(String email, Long id) {
+
+    }
 }
