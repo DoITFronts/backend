@@ -17,7 +17,7 @@ class LighteningServiceTest {
         //given
         ArrayList<Lightening> lightenings = new ArrayList<>();
         FakeLighteningCommandRepository lighteningCommandRepository = new FakeLighteningCommandRepository(lightenings);
-        LighteningService lighteningService = new LighteningService(lighteningCommandRepository, null, new fileUploadAdapter(null), null);
+        LighteningService lighteningService = new LighteningService(lighteningCommandRepository, null, new fileUploadAdapter(null));
         Lightening lightening = LighteningFixture.create();
         String email = "bht9011@gmail.com";
         //when
