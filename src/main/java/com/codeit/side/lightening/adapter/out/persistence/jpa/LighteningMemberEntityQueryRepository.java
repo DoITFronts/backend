@@ -52,18 +52,9 @@ public class LighteningMemberEntityQueryRepository {
                 .size();
     }
 
-    public List<LighteningMemberEntity> findAllBy(Long id) {
-        return jpaQueryFactory.selectFrom(lighteningMemberEntity)
-                .where(
-                        lighteningMemberEntity.lighteningId.eq(id),
-                        lighteningMemberEntity.isDeleted.eq(false)
-                )
-                .fetch();
-    }
-
     public List<LighteningMemberDto> findAllLighteningMemberDtosBy(Long id) {
         return jpaQueryFactory.select(Projections.constructor(LighteningMemberDto.class,
-                        lighteningMemberEntity.id,
+                        lighteningMemberEntity.lighteningId,
                         userEntity.id,
                         lighteningMemberEntity.email,
                         userEntity.name)
@@ -91,5 +82,22 @@ public class LighteningMemberEntityQueryRepository {
                 .from(lighteningLikeEntity)
                 .where(booleanBuilder)
                 .fetchOne() != null;
+    }
+
+    public List<LighteningMemberDto> findAllLighteningMemberDtosBy(List<Long> ids) {
+        return jpaQueryFactory.select(Projections.constructor(LighteningMemberDto.class,
+                        lighteningMemberEntity.lighteningId,
+                        userEntity.id,
+                        lighteningMemberEntity.email,
+                        userEntity.name)
+                )
+                .from(lighteningMemberEntity)
+                .innerJoin(userEntity)
+                .on(lighteningMemberEntity.email.eq(userEntity.email))
+                .where(
+                        lighteningMemberEntity.lighteningId.in(ids),
+                        lighteningMemberEntity.isDeleted.eq(false)
+                )
+                .fetch();
     }
 }

@@ -8,17 +8,21 @@ import lombok.RequiredArgsConstructor;
 @Getter
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 public class LighteningMember {
-    private final Long id;
+    private final Long lighteningId;
     private final Long userId;
     private final String userEmail;
     private final String userName;
 
     public static LighteningMember from(LighteningMemberDto lighteningMemberDto) {
         return new LighteningMember(
-                lighteningMemberDto.id(),
+                lighteningMemberDto.lighteningId(),
                 lighteningMemberDto.userId(),
                 lighteningMemberDto.userEmail(),
                 lighteningMemberDto.userName()
         );
+    }
+
+    public boolean isHost(String hostEmail) {
+        return userEmail.equals(hostEmail);
     }
 }

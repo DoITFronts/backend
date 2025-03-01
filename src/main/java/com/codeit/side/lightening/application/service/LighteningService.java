@@ -7,15 +7,16 @@ import com.codeit.side.common.application.port.out.FileUploadOutputPort;
 import com.codeit.side.lightening.application.port.in.LighteningUseCase;
 import com.codeit.side.lightening.application.port.out.LighteningCommandRepository;
 import com.codeit.side.lightening.application.port.out.LighteningReadRepository;
-import com.codeit.side.lightening.domain.Lightening;
-import com.codeit.side.lightening.domain.LighteningInfo;
-import com.codeit.side.lightening.domain.LighteningMember;
+import com.codeit.side.lightening.domain.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -67,13 +68,35 @@ public class LighteningService implements LighteningUseCase {
         return createLighteningInfo(lightening, lighteningMember, isLighteningLike);
     }
 
+    @Override
+    public List<LighteningInfo> findAllBy(String email, LighteningCondition lighteningCondition) {
+        List<Lightening> lightenings = lighteningReadRepository.findAllBy(lighteningCondition);
+        List<Long> lighteningIds = lightenings.stream()
+                .map(Lightening::getId)
+                .toList();
+        List<LighteningMember> lighteningMembers = lighteningReadRepository.findAllMembersBy(lighteningIds);
+        List<LighteningLike> lighteningLikes = lighteningReadRepository.findLighteningLikesBy(email, lighteningIds);
+        return createLighteningInfos(lightenings, lighteningMembers, lighteningLikes);
+    }
+
+    private List<LighteningInfo> createLighteningInfos(List<Lightening> lightenings, List<LighteningMember> lighteningMembers, List<LighteningLike> lighteningLikes) {
+        Map<Long, List<LighteningMember>> idToLighteningMembers = lighteningMembers.stream()
+                .collect(Collectors.groupingBy(LighteningMember::getLighteningId));
+        Map<Long, LighteningLike> idToLighteningLikes = lighteningLikes.stream()
+                .collect(Collectors.toMap(LighteningLike::getLighteningId, Function.identity()));
+
+        return lightenings.stream()
+                .map(lightening -> createLighteningInfo(lightening, idToLighteningMembers.getOrDefault(lightening.getId(), List.of()), idToLighteningLikes.containsKey(lightening.getId())))
+                .toList();
+    }
+
     private LighteningInfo createLighteningInfo(Lightening lightening, List<LighteningMember> lighteningMember, boolean isLighteningLike) {
         return LighteningInfo.of(lightening, lighteningMember, isLighteningLike);
     }
 
     private void validateLightening(String email, Lightening lightening) {
         if (lighteningReadRepository.isJoined(email, lightening.getId())) {
-            throw new UserAlreadyJoinedException("이미 참여한 번개입니다. id: %s, email: %s".formatted(lightening.getId(), email));
+            throw new UserAlreadyJoinedException("이미 참여한 번개입니다. lighteningId: %s, email: %s".formatted(lightening.getId(), email));
         }
 
         int currentMemberCount = lighteningReadRepository.countByLighteningId(lightening.getId());
