@@ -14,12 +14,12 @@ public class UserQueryRepositoryImpl implements UserQueryRepository {
 
     @Override
     public boolean existsByEmail(String email) {
-        return userJpaRepository.existsById(email);
+        return userJpaRepository.existsByEmail(email);
     }
 
     @Override
     public UserEntity getByEmail(String email) {
-        return userJpaRepository.findById(email)
+        return userJpaRepository.findByEmail(email)
                 .orElseThrow(UserNotFoundException::new);
     }
 }

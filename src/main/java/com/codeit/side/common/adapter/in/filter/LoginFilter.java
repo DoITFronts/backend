@@ -50,10 +50,11 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
             Authentication authResult
     ) {
         CustomUserDetails customUserDetails = (CustomUserDetails) authResult.getPrincipal();
-        String username = customUserDetails.getUsername();
+        Long userId = customUserDetails.getId();
+        String email = customUserDetails.getUsername();
         String nickname = customUserDetails.getNickname();
 
-        String token = jwtUtil.createJwt(username, nickname, EXPIRATION);
+        String token = jwtUtil.createJwt(userId, email, nickname, EXPIRATION);
 
         String bearer = "Bearer " + token;
 

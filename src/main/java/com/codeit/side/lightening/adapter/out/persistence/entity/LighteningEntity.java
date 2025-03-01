@@ -73,6 +73,6 @@ public class LighteningEntity extends BaseEntity {
     }
 
     public Lightening toDomain() {
-        return Lightening.of(id, title, summary, address, city, town, category, targetAt, endAt, capacity, hasImage);
+        return Lightening.of(id, title, summary, address, city, town, category, targetAt, endAt, capacity, hasImage, host);
     }
 }

@@ -1,6 +1,7 @@
 package com.codeit.side.lightening.adapter.out.persistence.entity;
 
 import com.codeit.side.common.adapter.out.persistence.entity.BaseEntity;
+import com.codeit.side.lightening.domain.LighteningLike;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -37,5 +38,9 @@ public class LighteningLikeEntity extends BaseEntity {
 
     public void update() {
         isDeleted = !isDeleted;
+    }
+
+    public LighteningLike toDomain() {
+        return LighteningLike.of(lighteningId, email);
     }
 }

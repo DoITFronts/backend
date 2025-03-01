@@ -20,6 +20,7 @@ public class Lightening {
     private final LocalDateTime endAt;
     private final Integer capacity;
     private final Boolean hasImage;
+    private final String hostEmail;
 
     public static Lightening of(
             String title,
@@ -33,7 +34,7 @@ public class Lightening {
             Integer capacity,
             Boolean hasImage
     ){
-        return of(null, title, summary, address, city, town, category, targetAt, endAt, capacity, hasImage);
+        return of(null, title, summary, address, city, town, category, targetAt, endAt, capacity, hasImage, null);
     }
 
     public static Lightening of(
@@ -47,9 +48,10 @@ public class Lightening {
             LocalDateTime targetAt,
             LocalDateTime endAt,
             Integer capacity,
-            Boolean hasImage
+            Boolean hasImage,
+            String hostEmail
     ){
-        return new Lightening(id, title, summary, address, city, town, category, targetAt, endAt, capacity, hasImage);
+        return new Lightening(id, title, summary, address, city, town, category, targetAt, endAt, capacity, hasImage, hostEmail);
     }
 
     public boolean isNotJoinable(int currentMemberCount) {
