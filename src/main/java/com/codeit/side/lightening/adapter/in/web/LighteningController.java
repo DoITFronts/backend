@@ -4,8 +4,10 @@ import com.codeit.side.common.adapter.exception.AuthenticationFailedException;
 import com.codeit.side.common.adapter.exception.IllegalRequestException;
 import com.codeit.side.lightening.adapter.in.web.request.LighteningRequest;
 import com.codeit.side.lightening.adapter.in.web.response.CreateLighteningResponse;
+import com.codeit.side.lightening.adapter.in.web.response.LighteningResponse;
 import com.codeit.side.lightening.application.port.in.LighteningUseCase;
 import com.codeit.side.lightening.domain.Lightening;
+import com.codeit.side.lightening.domain.LighteningInfo;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -30,7 +32,7 @@ public class LighteningController {
             @RequestPart(required = false) MultipartFile image,
             @Valid @RequestPart(name = "lightening") LighteningRequest lighteningRequest
     ) {
-        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+        String email = getEmail(true);
         validateImage(image);
         Lightening lighteningModel = lighteningRequest.toModel(hasImage(image));
         Lightening savedLightening = lighteningUseCase.save(email, lighteningModel, image);
@@ -39,7 +41,7 @@ public class LighteningController {
 
     @PostMapping("/{id}/like")
     public ResponseEntity<Void> like(@PathVariable Long id) {
-        String email = getName();
+        String email = getEmail(true);
         lighteningUseCase.like(email, id);
         return ResponseEntity.ok()
                 .build();
@@ -47,7 +49,7 @@ public class LighteningController {
 
     @PostMapping("/{id}/join")
     public ResponseEntity<Void> join(@PathVariable Long id) {
-        String email = getName();
+        String email = getEmail(true);
         lighteningUseCase.join(email, id);
         return ResponseEntity.ok()
                 .build();
@@ -55,16 +57,26 @@ public class LighteningController {
 
     @DeleteMapping("/{id}/join")
     public ResponseEntity<Void> leave(@PathVariable Long id) {
-        String email = getName();
+        String email = getEmail(true);
         lighteningUseCase.leave(email, id);
         return ResponseEntity.ok()
                 .build();
     }
 
-    private String getName() {
+    @GetMapping("/{id}")
+    public ResponseEntity<LighteningResponse> getLightening(@PathVariable Long id) {
+        String email = getEmail(false);
+        LighteningInfo lighteningInfo = lighteningUseCase.getById(email, id);
+        return ResponseEntity.ok(LighteningResponse.from(email, lighteningInfo));
+    }
+
+    private String getEmail(boolean required) {
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
-        if ("anonymousUser".equals(email)) {
+        if (required && "anonymousUser".equals(email)) {
             throw new AuthenticationFailedException("로그인이 필요합니다.");
+        }
+        if ("anonymousUser".equals(email)) {
+            return "";
         }
         return email;
     }

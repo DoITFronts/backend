@@ -30,7 +30,8 @@ public class LighteningFixture {
                 lightening.getTargetAt(),
                 lightening.getEndAt(),
                 lightening.getCapacity(),
-                false
+                false,
+                null
         );
     }
 }

@@ -50,9 +50,10 @@ public class JwtUtil {
                 .before(new Date());
     }
 
-    public String createJwt(String username, String nickname, Long expiration) {
+    public String createJwt(Long userId, String email, String nickname, Long expiration) {
         return Jwts.builder()
-                .claim("sub", username)
+                .claim("sub", userId.toString())
+                .claim("email", email)
                 .claim("nickname", nickname)
                 .issuedAt(new Date(System.currentTimeMillis()))
                 .expiration(new Date(System.currentTimeMillis() + expiration))

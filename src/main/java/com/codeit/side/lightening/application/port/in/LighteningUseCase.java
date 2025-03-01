@@ -1,6 +1,7 @@
 package com.codeit.side.lightening.application.port.in;
 
 import com.codeit.side.lightening.domain.Lightening;
+import com.codeit.side.lightening.domain.LighteningInfo;
 import org.springframework.web.multipart.MultipartFile;
 
 public interface LighteningUseCase {
@@ -11,4 +12,6 @@ public interface LighteningUseCase {
     void join(String email, Long id);
 
     void leave(String email, Long id);
+
+    LighteningInfo getById(String email, Long id);
 }

@@ -3,7 +3,6 @@ package com.codeit.side.common.adapter.out.security;
 import com.codeit.side.common.util.JwtUtil;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import lombok.RequiredArgsConstructor;
@@ -12,8 +11,6 @@ import org.springframework.stereotype.Service;
 
 import java.security.Key;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.function.Function;
 
 @Service
@@ -22,42 +19,12 @@ public class JwtService {
     private final JwtUtil jwtUtil;
 
     public String extractUsername(String token) {
-        return extractClaim(token, Claims::getSubject);
+        return extractClaim(token, claims -> claims.get("email", String.class));
     }
 
     public <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
         final Claims claims = extractAllClaims(token);
         return claimsResolver.apply(claims);
-    }
-
-    public String generateAccessToken(UserDetails userDetails) {
-        return generateToken(Map.of("type", "ACCESS"), userDetails, jwtUtil.getAccessExpiration());
-    }
-
-    public String generateRefreshToken(UserDetails userDetails) {
-        return generateToken(Map.of("type", "REFRESH"), userDetails, jwtUtil.getRefreshExpiration());
-    }
-
-    public boolean isRefreshToken(String token) {
-        return extractClaim(token, claims -> claims.get("type")).equals("REFRESH");
-    }
-
-    public String generateToken(UserDetails userDetails, long expirationTime) {
-        return generateToken(new HashMap<>(), userDetails, expirationTime);
-    }
-
-    public String generateToken(
-            Map<String, Object> extraClaims,
-            UserDetails userDetails,
-            long expirationTime
-    ) {
-        return Jwts.builder()
-                .setClaims(extraClaims)
-                .setSubject(userDetails.getUsername())
-                .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + expirationTime))
-                .signWith(getSigningKey(), SignatureAlgorithm.HS256)
-                .compact();
     }
 
     public boolean isTokenInvalid(String token, UserDetails userDetails) {

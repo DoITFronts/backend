@@ -5,8 +5,11 @@ import com.codeit.side.lightening.adapter.out.persistence.jpa.LighteningJpaEntit
 import com.codeit.side.lightening.adapter.out.persistence.jpa.LighteningMemberEntityQueryRepository;
 import com.codeit.side.lightening.application.port.out.LighteningReadRepository;
 import com.codeit.side.lightening.domain.Lightening;
+import com.codeit.side.lightening.domain.LighteningMember;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
 
 @Repository
 @RequiredArgsConstructor
@@ -24,5 +27,23 @@ public class LighteningReadRepositoryImpl implements LighteningReadRepository {
     @Override
     public boolean isJoined(String email, Long lighteningId) {
         return lighteningMemberEntityQueryRepository.isJoined(email, lighteningId);
+    }
+
+    @Override
+    public int countByLighteningId(Long id) {
+        return lighteningMemberEntityQueryRepository.countByLighteningId(id);
+    }
+
+    @Override
+    public List<LighteningMember> findAllMembersBy(Long id) {
+        return lighteningMemberEntityQueryRepository.findAllLighteningMemberDtosBy(id)
+                .stream()
+                .map(LighteningMember::from)
+                .toList();
+    }
+
+    @Override
+    public boolean findLighteningLikeBy(String email, Long id) {
+        return lighteningMemberEntityQueryRepository.findLighteningLikeBy(email, id);
     }
 }
