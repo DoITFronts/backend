@@ -22,6 +22,8 @@ public record LighteningResponse(
         boolean isJoined,
         int capacity,
         int participantCount,
+        boolean isConfirmed,
+        boolean isCompleted,
         List<LighteningMemberResponse> participants
 ) {
     public static LighteningResponse from(String email, LighteningInfo lighteningInfo) {
@@ -45,6 +47,8 @@ public record LighteningResponse(
                 lighteningMemberResponse.stream().anyMatch(member -> member.email().equals(email)),
                 lightening.getCapacity(),
                 lighteningInfo.getLighteningMembers().size(),
+                lighteningMemberResponse.size() >= 5,
+                lighteningMemberResponse.size() >= lightening.getCapacity(),
                 lighteningMemberResponse
         );
     }
