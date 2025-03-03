@@ -21,6 +21,7 @@ public class LighteningQueryEntityRepository {
 
         return jpaQueryFactory.selectFrom(lighteningEntity)
                 .where(booleanBuilder)
+                .orderBy(lighteningEntity.createdAt.desc())
                 .offset(lighteningCondition.getOffset())
                 .limit(lighteningCondition.getLighteningPaging().getSize())
                 .fetch();
