@@ -46,7 +46,8 @@ public class LighteningQueryBuilder {
 
     public LighteningQueryBuilder addTargetAtCondition(LocalDateTime targetAt) {
         if (targetAt != null) {
-            booleanBuilder.and(lighteningEntity.targetAt.eq(targetAt));
+            booleanBuilder.and(lighteningEntity.targetAt.goe(targetAt))
+                    .and(lighteningEntity.targetAt.lt(targetAt.plusDays(1)));
         }
         return this;
     }
