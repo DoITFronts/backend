@@ -11,6 +11,7 @@ import java.time.LocalDate;
 @Builder(access = AccessLevel.PACKAGE)
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 public class User {
+    private final Long id;
     private final String email;
     private final String password;
     private final String name;
@@ -18,6 +19,10 @@ public class User {
     private final LocalDate birth;
 
     public static User of(String email, String password, String name, String nickname, LocalDate birth) {
-        return new User(email, password, name, nickname, birth);
+        return of(null, email, password, name, nickname, birth);
+    }
+
+    public static User of(Long id, String email, String password, String name, String nickname, LocalDate birth) {
+        return new User(id, email, password, name, nickname, birth);
     }
 }
