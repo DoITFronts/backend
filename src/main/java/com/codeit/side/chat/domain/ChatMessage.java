@@ -1,25 +1,23 @@
 package com.codeit.side.chat.domain;
 
+import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 
 import java.time.LocalDateTime;
 
 @Getter
+@RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 public class ChatMessage {
-    private Long id;
-    private Long bookClubId;
-    private LocalDateTime date;
-    private Long userId;
-    private String userNickname;
-    private ChatType type;
-    private String content;
+    private final Long id;
+    private final Long roomId;
+    private final LocalDateTime date;
+    private final Long userId;
+    private final String userNickname;
+    private final ChatType type;
+    private final String content;
 
-    public ChatMessage(Long bookClubId, LocalDateTime date, Long userId, String userNickname, ChatType type,  String content) {
-        this.bookClubId = bookClubId;
-        this.date = date;
-        this.userId = userId;
-        this.userNickname = userNickname;
-        this.type = type;
-        this.content = content;
+    public static ChatMessage of(Long roomId, LocalDateTime date, Long userId, String userNickname, ChatType type, String content) {
+        return new ChatMessage(null, roomId, date, userId, userNickname, type, content);
     }
 }

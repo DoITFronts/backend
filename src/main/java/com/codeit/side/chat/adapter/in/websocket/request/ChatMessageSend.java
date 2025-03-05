@@ -2,27 +2,28 @@ package com.codeit.side.chat.adapter.in.websocket.request;
 
 import com.codeit.side.chat.domain.ChatMessage;
 import com.codeit.side.chat.domain.ChatType;
-import lombok.AllArgsConstructor;
+import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 
 import java.time.LocalDateTime;
 
-@AllArgsConstructor
 @Getter
+@RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 public class ChatMessageSend {
-    private Long id;
-    private Long bookClubId;
-    private LocalDateTime date;
-    private Long userId;
-    private String userNickname;
-    private ChatType type;
-    private String content;
-    private String image;
+    private final Long id;
+    private final Long roomId;
+    private final LocalDateTime date;
+    private final Long userId;
+    private final String userNickname;
+    private final ChatType type;
+    private final String content;
+    private final String image;
 
-    public static ChatMessageSend from(ChatMessage chatMessage, String image) {
-        ChatMessageSend messageSend = new ChatMessageSend(
+    public static ChatMessageSend of(ChatMessage chatMessage, String image) {
+        return new ChatMessageSend(
                 chatMessage.getId(),
-                chatMessage.getBookClubId(),
+                chatMessage.getRoomId(),
                 chatMessage.getDate(),
                 chatMessage.getUserId(),
                 chatMessage.getUserNickname(),
@@ -30,6 +31,5 @@ public class ChatMessageSend {
                 chatMessage.getContent(),
                 image
         );
-        return messageSend;
     }
 }

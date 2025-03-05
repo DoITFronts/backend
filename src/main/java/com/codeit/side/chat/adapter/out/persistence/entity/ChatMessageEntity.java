@@ -13,14 +13,14 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Table(
         name = "chat_message",
-        indexes = @Index(name = "idx_book_club", columnList = "bookClubId")
+        indexes = @Index(name = "idx_chat_room", columnList = "chatRoomId")
 )
 public class ChatMessageEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private Long lighteningId;
+    private Long chatRoomId;
 
     private LocalDateTime date;
 
@@ -32,10 +32,10 @@ public class ChatMessageEntity {
 
     private String content;
 
-    public static ChatMessageEntity from(ChatMessage chatMessage){
+    public static ChatMessageEntity from(ChatMessage chatMessage) {
         return new ChatMessageEntity(
                 chatMessage.getId(),
-                chatMessage.getBookClubId(),
+                chatMessage.getRoomId(),
                 chatMessage.getDate(),
                 chatMessage.getUserId(),
                 chatMessage.getUserNickname(),
@@ -44,14 +44,7 @@ public class ChatMessageEntity {
         );
     }
 
-    public ChatMessage toDomain(){
-        return new ChatMessage(
-                lighteningId,
-                date,
-                userId,
-                userNickname,
-                type,
-                content
-        );
+    public ChatMessage toDomain() {
+        return ChatMessage.of(chatRoomId, date, userId, userNickname, type, content);
     }
 }

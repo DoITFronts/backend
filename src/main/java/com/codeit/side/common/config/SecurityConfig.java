@@ -37,7 +37,8 @@ public class SecurityConfig {
             "/",
             "/api/v1/login",
             "/api/v1/join",
-            "/api/v1/**"
+            "/api/v1/**",
+            "/api/v1/ws/**"
     };
 
     private final JwtAuthenticationFilter jwtAuthenticationFilter;

@@ -1,7 +1,7 @@
 package com.codeit.side.common.config;
 
+import com.codeit.side.common.adapter.out.security.CustomUserDetails;
 import com.codeit.side.common.util.JwtUtil;
-import com.codeit.side.user.domain.User;
 import io.jsonwebtoken.JwtException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -20,7 +20,6 @@ public class JwtWebSocketInterceptor implements HandshakeInterceptor {
     private final JwtUtil jwtUtil;
     private final UserDetailsService userDetailsService;
 
-
     @Override
     public boolean beforeHandshake(
             ServerHttpRequest request,
@@ -29,13 +28,14 @@ public class JwtWebSocketInterceptor implements HandshakeInterceptor {
             Map<String, Object> attributes
     ) {
         String query = request.getURI().getQuery();
+        System.out.println("query = " + query);
         if (query == null || !query.contains("token=") || query.split("token=")[1].isEmpty()) {
             // 쿼리 파라미터가 없거나 'token'이 없는 경우
             response.setStatusCode(HttpStatus.UNAUTHORIZED);
             return false; // 핸드셰이크 중단
         }
 
-        String jwt = query.split("token=")[1];
+        String jwt = query.split("&")[0].split("token=")[1].split("Bearer ")[1];
 
         try {
             String email = jwtUtil.getEmail(jwt);
@@ -47,8 +47,8 @@ public class JwtWebSocketInterceptor implements HandshakeInterceptor {
                 throw new JwtException("잘못된 토큰입니다.");
             }
 
-            User user = (User) userDetailsService.loadUserByUsername(email);
-            attributes.put("user", user);
+            CustomUserDetails customUserDetails = (CustomUserDetails) userDetailsService.loadUserByUsername(email);
+            attributes.put("user", customUserDetails.getUser());
             return true;
         } catch (Exception e) {
             response.setStatusCode(HttpStatus.UNAUTHORIZED);
