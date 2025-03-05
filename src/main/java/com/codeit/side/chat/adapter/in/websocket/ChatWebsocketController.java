@@ -2,7 +2,7 @@ package com.codeit.side.chat.adapter.in.websocket;
 
 import com.codeit.side.chat.adapter.in.websocket.request.ChatMessageReceived;
 import com.codeit.side.chat.adapter.in.websocket.request.ChatMessageSend;
-import com.codeit.side.chat.application.port.in.SaveChatMessageUseCase;
+import com.codeit.side.chat.application.port.in.ChatMessageUseCase;
 import com.codeit.side.chat.domain.ChatMessage;
 import com.codeit.side.chat.domain.ChatType;
 import com.codeit.side.user.domain.User;
@@ -19,10 +19,10 @@ import java.util.Map;
 
 @Controller
 @RequiredArgsConstructor
-public class ChatController {
+public class ChatWebsocketController {
     private final SimpMessagingTemplate messagingTemplate;
 
-    private final SaveChatMessageUseCase saveChatMessageUseCase;
+    private final ChatMessageUseCase chatMessageUseCase;
 //    private final ChatHistoryUseCase chatHistoryUseCase;
 
     @MessageMapping("/room/{id}/sendMessage")
@@ -41,11 +41,10 @@ public class ChatController {
                 ChatType.CHAT,
                 chatMessageReceived.getContent()
         );
-
         String destination = "/topic/room/%s".formatted(id);
 
         messagingTemplate.convertAndSend(destination, ChatMessageSend.of(chatMessage, ""));
-        saveChatMessageUseCase.save(chatMessage);
+        chatMessageUseCase.save(chatMessage);
     }
 
 //    @MessageMapping("/room/recent")

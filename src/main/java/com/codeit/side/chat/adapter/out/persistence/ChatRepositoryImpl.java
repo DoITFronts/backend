@@ -5,12 +5,12 @@ import com.codeit.side.chat.adapter.out.persistence.jpa.ChatMessageJpaRepository
 import com.codeit.side.chat.application.port.out.ChatMessageRepository;
 import com.codeit.side.chat.domain.ChatMessage;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-@Component
+@Repository
 @RequiredArgsConstructor
-public class ChatPersistenceAdapter implements ChatMessageRepository {
+public class ChatRepositoryImpl implements ChatMessageRepository {
     private final ChatMessageJpaRepository chatMessageJpaRepository;
 
     @Override

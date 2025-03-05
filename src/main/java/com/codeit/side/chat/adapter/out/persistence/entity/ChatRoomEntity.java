@@ -1,0 +1,28 @@
+package com.codeit.side.chat.adapter.out.persistence.entity;
+
+import com.codeit.side.common.adapter.out.persistence.entity.BaseEntity;
+import jakarta.persistence.*;
+import lombok.*;
+
+@Getter
+@Entity
+@Table(name = "chat_rooms")
+@Builder(access = AccessLevel.PACKAGE)
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+public class ChatRoomEntity extends BaseEntity {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    private String name;
+
+    private Long hostId;
+
+    public static ChatRoomEntity of(String name, Long hostId) {
+        return ChatRoomEntity.builder()
+                .name(name)
+                .hostId(hostId)
+                .build();
+    }
+}
