@@ -86,4 +86,14 @@ public class ExceptionController {
         return ResponseEntity.status(errorCode.getStatusCode())
                 .body(new ExceptionResponse(errorCode.getCode(), e.getMessage()));
     }
+
+    @ExceptionHandler(ChatRoomNotFoundException.class)
+    public ResponseEntity<ExceptionResponse> chatRoomNotFoundExceptionHandler(HttpServletRequest request, ChatRoomNotFoundException e) {
+        ErrorCode errorCode = e.getErrorCode();
+
+        log.error("Request URL: {}, Error Message: {}", request.getRequestURL(), e.getMessage());
+
+        return ResponseEntity.status(errorCode.getStatusCode())
+                .body(new ExceptionResponse(errorCode.getCode(), e.getMessage()));
+    }
 }

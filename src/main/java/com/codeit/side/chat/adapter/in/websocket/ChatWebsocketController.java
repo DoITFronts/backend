@@ -31,6 +31,7 @@ public class ChatWebsocketController {
             @Payload ChatMessageReceived chatMessageReceived
     ) {
         User user = (User) sessionAttributes.get("user");
+        chatMessageUseCase.findChatRoomBy(id, user.getId());
 
         ChatMessage chatMessage = ChatMessage.of(
                 id,

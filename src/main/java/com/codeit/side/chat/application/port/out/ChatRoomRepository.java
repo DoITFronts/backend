@@ -9,4 +9,6 @@ public interface ChatRoomRepository {
     Long save(ChatRoomCommand chatRoomCommand);
 
     List<ChatRoom> findAllByUserId(Long id);
+
+    ChatRoom getBy(Long id);
 }

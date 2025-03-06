@@ -12,4 +12,6 @@ public interface ChatMessageUseCase {
     void joinChatRoom(String email, ChatRoomCommand chatRoomCommand);
 
     List<ChatRoomInfo> findAllChatRooms(String email);
+
+    void findChatRoomBy(Long id, Long userId);
 }

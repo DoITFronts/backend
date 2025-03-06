@@ -8,6 +8,7 @@ import com.codeit.side.chat.domain.ChatMessage;
 import com.codeit.side.chat.domain.ChatRoom;
 import com.codeit.side.chat.domain.ChatRoomInfo;
 import com.codeit.side.chat.domain.command.ChatRoomCommand;
+import com.codeit.side.common.adapter.exception.IllegalRequestException;
 import com.codeit.side.user.application.port.out.UserQueryRepository;
 import com.codeit.side.user.domain.User;
 import lombok.RequiredArgsConstructor;
@@ -58,6 +59,14 @@ public class ChatMessageService implements ChatMessageUseCase {
         Map<Long, ChatMessage> allLastMessageByIds = chatMessageRepository.findAllLastMessageByIds(chatRoomIds);
         Map<Long, Integer> idToMemberSize = chatMemberRepository.findAllMemberCountByIds(chatRoomIds);
         return createChatRoomInfos(chatRooms, allLastMessageByIds, idToMemberSize);
+    }
+
+    @Override
+    public void findChatRoomBy(Long id, Long userId) {
+        ChatRoom chatRoom = chatRoomRepository.getBy(id);
+        if (!chatMemberRepository.existsByChatRoomIdAndUserId(id, userId)) {
+            throw new IllegalRequestException("채팅방에 참여하지 않은 사용자입니다.");
+        }
     }
 
     private List<ChatRoomInfo> createChatRoomInfos(List<ChatRoom> chatRooms, Map<Long, ChatMessage> allLastMessageByIds, Map<Long, Integer> idToMemberSize) {
