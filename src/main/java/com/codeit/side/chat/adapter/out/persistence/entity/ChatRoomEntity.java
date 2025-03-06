@@ -1,5 +1,6 @@
 package com.codeit.side.chat.adapter.out.persistence.entity;
 
+import com.codeit.side.chat.domain.ChatRoom;
 import com.codeit.side.common.adapter.out.persistence.entity.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
@@ -24,5 +25,9 @@ public class ChatRoomEntity extends BaseEntity {
                 .name(name)
                 .hostId(hostId)
                 .build();
+    }
+
+    public ChatRoom toDomain() {
+        return ChatRoom.of(id, name, hostId);
     }
 }

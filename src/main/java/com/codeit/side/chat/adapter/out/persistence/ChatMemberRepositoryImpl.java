@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.stream.Stream;
 
 @Repository
 @RequiredArgsConstructor
@@ -23,7 +24,8 @@ public class ChatMemberRepositoryImpl implements ChatMemberRepository {
                 .map(userId -> chatMemberJpaRepository.save(ChatMemberEntity.of(id, userId)))
                 .toList();
         ChatMemberEntity chatMemberEntity = ChatMemberEntity.of(id, chatRoomCommand.getHostId());
-        chatMemberEntities.add(chatMemberEntity);
-        chatMemberJpaRepository.saveAll(chatMemberEntities);
+        List<ChatMemberEntity> list = Stream.concat(chatMemberEntities.stream(), Stream.of(chatMemberEntity))
+                .toList();
+        chatMemberJpaRepository.saveAll(list);
     }
 }
