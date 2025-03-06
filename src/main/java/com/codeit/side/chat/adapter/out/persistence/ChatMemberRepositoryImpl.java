@@ -6,14 +6,14 @@ import com.codeit.side.chat.application.port.out.ChatMemberRepository;
 import com.codeit.side.chat.domain.command.ChatRoomCommand;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @Repository
 @RequiredArgsConstructor
-@Transactional(readOnly = true)
 public class ChatMemberRepositoryImpl implements ChatMemberRepository {
     private final ChatMemberJpaRepository chatMemberJpaRepository;
 
@@ -27,5 +27,14 @@ public class ChatMemberRepositoryImpl implements ChatMemberRepository {
         List<ChatMemberEntity> list = Stream.concat(chatMemberEntities.stream(), Stream.of(chatMemberEntity))
                 .toList();
         chatMemberJpaRepository.saveAll(list);
+    }
+
+    @Override
+    public Map<Long, Integer> findAllMemberCountByIds(List<Long> chatRoomIds) {
+        return chatRoomIds.stream()
+                .collect(Collectors.toMap(
+                        chatRoomId -> chatRoomId,
+                        chatRoomId -> chatMemberJpaRepository.findAllByChatRoomId(chatRoomId).size()
+                ));
     }
 }

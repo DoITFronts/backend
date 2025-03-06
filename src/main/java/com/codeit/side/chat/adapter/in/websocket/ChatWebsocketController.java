@@ -23,7 +23,6 @@ public class ChatWebsocketController {
     private final SimpMessagingTemplate messagingTemplate;
 
     private final ChatMessageUseCase chatMessageUseCase;
-//    private final ChatHistoryUseCase chatHistoryUseCase;
 
     @MessageMapping("/room/{id}/sendMessage")
     public void sendMessage(
@@ -46,25 +45,4 @@ public class ChatWebsocketController {
         messagingTemplate.convertAndSend(destination, ChatMessageSend.of(chatMessage, ""));
         chatMessageUseCase.save(chatMessage);
     }
-
-//    @MessageMapping("/room/recent")
-//    @SendToUser("/queue/recent")
-//    public List<ChatMessage> getRecentChats(
-//            @Header(name = "simpSessionAttributes") Map<String, Object> sessionAttributes
-//    ) {
-//        User user = (User) sessionAttributes.get("user");
-//
-//        return chatHistoryUseCase.getRecentClubChatsForUser(user.getId());
-//    }
-//
-//    @MessageMapping("/room/history/{id}")
-//    @SendToUser("/queue/chatHistory")
-//    public HistoryResponses getAllChatsByBookClubId(
-//            @Header(name = "simpSessionAttributes") Map<String, Object> sessionAttributes,
-//            @DestinationVariable Long id
-//    ) {
-//        User user = (User) sessionAttributes.get("user");
-//
-//        return HistoryResponses.from(chatHistoryUseCase.getAllClubChats(user.getId(), id));
-//    }
 }

@@ -2,11 +2,9 @@ package com.codeit.side.chat.adapter.out.persistence.entity;
 
 import com.codeit.side.common.adapter.out.persistence.entity.BaseEntity;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
+@Getter
 @Entity
 @Table(name = "chat_members")
 @Builder(access = AccessLevel.PACKAGE)

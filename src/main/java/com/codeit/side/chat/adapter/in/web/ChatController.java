@@ -3,7 +3,7 @@ package com.codeit.side.chat.adapter.in.web;
 import com.codeit.side.chat.adapter.in.web.request.ChatRequest;
 import com.codeit.side.chat.adapter.in.web.request.ChatRoomResponses;
 import com.codeit.side.chat.application.port.in.ChatMessageUseCase;
-import com.codeit.side.chat.domain.ChatRoom;
+import com.codeit.side.chat.domain.ChatRoomInfo;
 import com.codeit.side.chat.domain.command.ChatRoomCommand;
 import com.codeit.side.common.adapter.exception.AuthenticationFailedException;
 import lombok.RequiredArgsConstructor;
@@ -19,20 +19,19 @@ import java.util.List;
 public class ChatController {
     private final ChatMessageUseCase chatMessageUseCase;
 
-    @PostMapping("/join")
+    @PostMapping("/rooms")
     public void joinChatRoom(@RequestBody ChatRequest chatRequest) {
         String email = getEmail();
         ChatRoomCommand chatRoomCommand = chatRequest.toCommand();
         chatMessageUseCase.joinChatRoom(email, chatRoomCommand);
     }
 
-    @GetMapping
+    @GetMapping("/rooms")
     public ResponseEntity<ChatRoomResponses> getRooms() {
         String email = getEmail();
-        List<ChatRoom> chatRooms = chatMessageUseCase.findAllChatRooms(email);
-        return ResponseEntity.ok(ChatRoomResponses.from(chatRooms));
+        List<ChatRoomInfo> chatRoomsInfo = chatMessageUseCase.findAllChatRooms(email);
+        return ResponseEntity.ok(ChatRoomResponses.from(chatRoomsInfo));
     }
-
 
     private String getEmail() {
         String email = SecurityContextHolder.getContext().getAuthentication().getName();

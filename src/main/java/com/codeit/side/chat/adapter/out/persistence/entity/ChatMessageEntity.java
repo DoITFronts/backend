@@ -4,10 +4,12 @@ import com.codeit.side.chat.domain.ChatMessage;
 import com.codeit.side.chat.domain.ChatType;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
+@Getter
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor

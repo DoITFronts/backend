@@ -2,6 +2,7 @@ package com.codeit.side.common.adapter;
 
 import com.codeit.side.common.adapter.exception.*;
 import com.codeit.side.common.adapter.response.ExceptionResponse;
+import io.jsonwebtoken.JwtException;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -74,5 +75,15 @@ public class ExceptionController {
 
         return ResponseEntity.status(errorCode.getStatusCode())
                 .body(new ExceptionResponse(errorCode.getCode(), errorCode.getMessage()));
+    }
+
+    @ExceptionHandler(JwtException.class)
+    public ResponseEntity<ExceptionResponse> jwtExceptionHandler(HttpServletRequest request, JwtException e) {
+        ErrorCode errorCode = ErrorCode.UNAUTHORIZED;
+
+        log.error("Request URL: {}, Error Message: {}", request.getRequestURL(), e.getMessage());
+
+        return ResponseEntity.status(errorCode.getStatusCode())
+                .body(new ExceptionResponse(errorCode.getCode(), e.getMessage()));
     }
 }

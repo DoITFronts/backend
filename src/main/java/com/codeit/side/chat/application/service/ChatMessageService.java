@@ -6,21 +6,22 @@ import com.codeit.side.chat.application.port.out.ChatMessageRepository;
 import com.codeit.side.chat.application.port.out.ChatRoomRepository;
 import com.codeit.side.chat.domain.ChatMessage;
 import com.codeit.side.chat.domain.ChatRoom;
+import com.codeit.side.chat.domain.ChatRoomInfo;
 import com.codeit.side.chat.domain.command.ChatRoomCommand;
 import com.codeit.side.user.application.port.out.UserQueryRepository;
 import com.codeit.side.user.domain.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Map;
 
-import static java.util.stream.Collectors.groupingBy;
-
 @Primary
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class ChatMessageService implements ChatMessageUseCase {
     private final ChatMessageRepository chatMessageRepository;
     private final UserQueryRepository userQueryRepository;
@@ -33,6 +34,7 @@ public class ChatMessageService implements ChatMessageUseCase {
     }
 
     @Override
+    @Transactional
     public void joinChatRoom(String email, ChatRoomCommand chatRoomCommand) {
         User host = userQueryRepository.getByEmail(email)
                 .toDomain();
@@ -46,12 +48,25 @@ public class ChatMessageService implements ChatMessageUseCase {
     }
 
     @Override
-    public List<ChatRoom> findAllChatRooms(String email) {
+    public List<ChatRoomInfo> findAllChatRooms(String email) {
         User user = userQueryRepository.getByEmail(email)
                 .toDomain();
         List<ChatRoom> chatRooms = chatRoomRepository.findAllByUserId(user.getId());
-        Map<Long, List<ChatRoom>> idToChatRooms = chatRooms.stream()
-                .collect(groupingBy(ChatRoom::getId));
-        return chatRooms;
+        List<Long> chatRoomIds = chatRooms.stream()
+                .map(ChatRoom::getId)
+                .toList();
+        Map<Long, ChatMessage> allLastMessageByIds = chatMessageRepository.findAllLastMessageByIds(chatRoomIds);
+        Map<Long, Integer> idToMemberSize = chatMemberRepository.findAllMemberCountByIds(chatRoomIds);
+        return createChatRoomInfos(chatRooms, allLastMessageByIds, idToMemberSize);
+    }
+
+    private List<ChatRoomInfo> createChatRoomInfos(List<ChatRoom> chatRooms, Map<Long, ChatMessage> allLastMessageByIds, Map<Long, Integer> idToMemberSize) {
+        return chatRooms.stream()
+                .map(chatRoom -> createChatRoomInfo(chatRoom, allLastMessageByIds.get(chatRoom.getId()), idToMemberSize.get(chatRoom.getId())))
+                .toList();
+    }
+
+    private ChatRoomInfo createChatRoomInfo(ChatRoom chatRoom, ChatMessage chatMessage, Integer integer) {
+        return ChatRoomInfo.of(chatRoom, chatMessage, integer);
     }
 }
