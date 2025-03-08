@@ -88,6 +88,28 @@ public class LighteningEntity extends BaseEntity {
                 .build();
     }
 
+    public static LighteningEntity of(Long id, String title, String summary, String description, String address, String city, String town, Category category, LocalDateTime targetAt, LocalDateTime endAt, Integer capacity, Boolean hasImage, String host, Integer minCapacity, String placeName, String latitude, String longitude) {
+        return LighteningEntity.builder()
+                .id(id)
+                .title(title)
+                .summary(summary)
+                .description(description)
+                .address(address)
+                .city(city)
+                .town(town)
+                .category(category)
+                .targetAt(targetAt)
+                .endAt(endAt)
+                .capacity(capacity)
+                .hasImage(hasImage)
+                .host(host)
+                .minCapacity(minCapacity)
+                .placeName(placeName)
+                .latitude(latitude)
+                .longitude(longitude)
+                .build();
+    }
+
     public Lightening toDomain() {
         return Lightening.of(id, title, summary, description, address, city, town, category, targetAt, endAt, capacity, hasImage, host, minCapacity, placeName, latitude, longitude);
     }

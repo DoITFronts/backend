@@ -8,7 +8,12 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public enum LighteningOrder {
+    //번개 목록
     CREATED_DESC,
+    END_DESC,
+    PARTICIPANT_COUNT,
+
+    //마이페이지 내가 만든 번개 목록
     TARGET_DATE_DESC,
     ;
 

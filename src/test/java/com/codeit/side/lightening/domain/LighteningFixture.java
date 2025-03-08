@@ -15,7 +15,7 @@ public class LighteningFixture {
                 LocalDateTime.of(2021, 1, 2, 0, 0),
                 100,
                 false,
-                null,
+                1,
                 null,
                 null,
                 null
@@ -37,7 +37,7 @@ public class LighteningFixture {
                 lightening.getCapacity(),
                 false,
                 null,
-                null,
+                1,
                 null,
                 null,
                 null
