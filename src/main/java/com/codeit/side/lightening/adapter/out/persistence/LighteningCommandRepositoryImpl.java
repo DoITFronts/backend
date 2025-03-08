@@ -50,4 +50,10 @@ public class LighteningCommandRepositoryImpl implements LighteningCommandReposit
         lighteningMemberEntityQueryRepository.findByIdAndEmail(email, id)
                 .ifPresent(LighteningMemberEntity::delete);
     }
+
+    @Override
+    public void update(Long id, String description) {
+        lighteningJpaEntityRepository.findById(id)
+                .ifPresent(lighteningEntity -> lighteningEntity.update(description));
+    }
 }

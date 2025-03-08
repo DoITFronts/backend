@@ -13,21 +13,22 @@ public record LighteningResponse(
         String address,
         String city,
         String town,
+        String placeName,
+        String latitude,
+        String longitude,
         LocalDateTime targetAt,
         LocalDateTime endAt,
         String title,
         String summary,
+        String description,
         String imageUrl,
         boolean isLiked,
         boolean isJoined,
         int capacity,
+        int minCapacity,
         int participantCount,
         boolean isConfirmed,
         boolean isCompleted,
-        int minCapacity,
-        String placeName,
-        String latitude,
-        String longitude,
         List<LighteningMemberResponse> participants
 ) {
     public static LighteningResponse from(String email, LighteningInfo lighteningInfo) {
@@ -36,27 +37,29 @@ public record LighteningResponse(
                 .stream()
                 .map(member -> LighteningMemberResponse.from(member, lightening.getHostEmail()))
                 .toList();
+
         return new LighteningResponse(
                 lightening.getId(),
                 lightening.getCategory(),
                 lightening.getAddress(),
                 lightening.getCity(),
                 lightening.getTown(),
+                lightening.getPlaceName(),
+                lightening.getLatitude(),
+                lightening.getLongitude(),
                 lightening.getTargetAt(),
                 lightening.getEndAt(),
                 lightening.getTitle(),
                 lightening.getSummary(),
+                lightening.getDescription(),
                 lightening.getHasImage() ? "https://codeit-doit.s3.ap-northeast-2.amazonaws.com/lightening/%s/image.jpg".formatted(lightening.getId()) : "",
                 lighteningInfo.isLiked(),
                 lighteningMemberResponse.stream().anyMatch(member -> member.email().equals(email)),
                 lightening.getCapacity(),
+                lightening.getMinCapacity(),
                 lighteningInfo.getLighteningMembers().size(),
                 lighteningMemberResponse.size() >= lightening.getMinCapacity(),
                 lighteningMemberResponse.size() >= lightening.getCapacity(),
-                lightening.getMinCapacity(),
-                lightening.getPlaceName(),
-                lightening.getLatitude(),
-                lightening.getLongitude(),
                 lighteningMemberResponse
         );
     }

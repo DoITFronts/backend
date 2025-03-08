@@ -35,4 +35,9 @@ public class FakeLighteningCommandRepository implements LighteningCommandReposit
     public void leave(String email, Long id) {
 
     }
+
+    @Override
+    public void update(Long id, String description) {
+
+    }
 }

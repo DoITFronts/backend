@@ -10,4 +10,6 @@ public interface LighteningCommandRepository {
     void join(String email, Long id);
 
     void leave(String email, Long id);
+
+    void update(Long id, String description);
 }

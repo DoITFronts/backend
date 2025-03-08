@@ -1,5 +1,6 @@
 package com.codeit.side.lightening.application.service;
 
+import com.codeit.side.common.adapter.exception.IllegalRequestException;
 import com.codeit.side.common.adapter.exception.LighteningAlreadyFullException;
 import com.codeit.side.common.adapter.exception.UserAlreadyJoinedException;
 import com.codeit.side.common.adapter.exception.UserNotJoinedException;
@@ -78,6 +79,16 @@ public class LighteningService implements LighteningUseCase {
         List<LighteningMember> lighteningMembers = lighteningReadRepository.findAllMembersBy(lighteningIds);
         List<LighteningLike> lighteningLikes = lighteningReadRepository.findLighteningLikesBy(email, lighteningIds);
         return createLighteningInfos(lightenings, lighteningMembers, lighteningLikes);
+    }
+
+    @Override
+    @Transactional
+    public void update(String email, Long id, String description) {
+        Lightening lightening = lighteningReadRepository.getById(id);
+        if (!lightening.getHostEmail().equals(email)) {
+            throw new IllegalRequestException("해당 번개의 주최자가 아닙니다. lighteningId: %s, email: %s".formatted(id, email));
+        }
+        lighteningCommandRepository.update(id, description);
     }
 
     private List<LighteningInfo> createLighteningInfos(List<Lightening> lightenings, List<LighteningMember> lighteningMembers, List<LighteningLike> lighteningLikes) {

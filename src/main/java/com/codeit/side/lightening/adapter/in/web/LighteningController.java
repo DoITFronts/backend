@@ -2,6 +2,7 @@ package com.codeit.side.lightening.adapter.in.web;
 
 import com.codeit.side.common.adapter.exception.AuthenticationFailedException;
 import com.codeit.side.lightening.adapter.in.web.request.LighteningRequest;
+import com.codeit.side.lightening.adapter.in.web.request.LighteningUpdateRequest;
 import com.codeit.side.lightening.adapter.in.web.response.CreateLighteningResponse;
 import com.codeit.side.lightening.adapter.in.web.response.LighteningResponse;
 import com.codeit.side.lightening.adapter.in.web.response.LighteningResponses;
@@ -63,6 +64,14 @@ public class LighteningController {
         String email = getEmail(false);
         LighteningInfo lighteningInfo = lighteningUseCase.getById(email, id);
         return ResponseEntity.ok(LighteningResponse.from(email, lighteningInfo));
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Void> update(@PathVariable Long id, @RequestBody LighteningUpdateRequest request) {
+        String email = getEmail(true);
+        lighteningUseCase.update(email, id, request.description());
+        return ResponseEntity.ok()
+                .build();
     }
 
     @GetMapping

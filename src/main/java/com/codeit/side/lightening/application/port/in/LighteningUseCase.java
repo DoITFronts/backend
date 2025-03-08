@@ -19,4 +19,6 @@ public interface LighteningUseCase {
     LighteningInfo getById(String email, Long id);
 
     List<LighteningInfo> findAllBy(String email, LighteningCondition lighteningCondition);
+
+    void update(String email, Long id, String description);
 }

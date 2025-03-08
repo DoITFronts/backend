@@ -13,6 +13,7 @@ public class Lightening {
     private final Long id;
     private final String title;
     private final String summary;
+    private final String description;
     private final String address;
     private final String city;
     private final String town;
@@ -43,13 +44,14 @@ public class Lightening {
             String latitude,
             String longitude
     ){
-        return of(null, title, summary, address, city, town, category, targetAt, endAt, capacity, hasImage, null, minCapacity, placeName, latitude, longitude);
+        return of(null, title, summary, null, address, city, town, category, targetAt, endAt, capacity, hasImage, null, minCapacity, placeName, latitude, longitude);
     }
 
     public static Lightening of(
             Long id,
             String title,
             String summary,
+            String description,
             String address,
             String city,
             String town,
@@ -65,7 +67,7 @@ public class Lightening {
             String longitude
     ){
         validateCapacity(capacity, minCapacity);
-        return new Lightening(id, title, summary, address, city, town, category, targetAt, endAt, capacity, hasImage, hostEmail, minCapacity, placeName, latitude, longitude);
+        return new Lightening(id, title, summary, description, address, city, town, category, targetAt, endAt, capacity, hasImage, hostEmail, minCapacity, placeName, latitude, longitude);
     }
 
     private static void validateCapacity(Integer capacity, Integer minCapacity) {

@@ -27,6 +27,7 @@ public class LighteningFixture {
                 id,
                 lightening.getTitle(),
                 lightening.getSummary(),
+                lightening.getDescription(),
                 lightening.getAddress(),
                 lightening.getCity(),
                 lightening.getTown(),
