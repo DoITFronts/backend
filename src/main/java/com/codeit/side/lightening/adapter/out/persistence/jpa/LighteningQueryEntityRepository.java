@@ -58,17 +58,6 @@ public class LighteningQueryEntityRepository {
         };
     }
 
-    private BooleanBuilder likeConditionBuilder(LighteningCondition lighteningCondition, String email) {
-        return LighteningQueryBuilder.Builder()
-                .addIsInactiveCondition(false)
-                .addCategoryCondition(lighteningCondition.getCategory())
-                .addCityCondition(lighteningCondition.getCity())
-                .addTownCondition(lighteningCondition.getTown())
-                .addTargetAtCondition(lighteningCondition.getTargetAt())
-                .addLikeCondition(email)
-                .build();
-    }
-
     private BooleanBuilder listConditionBuilder(LighteningCondition lighteningCondition) {
         return LighteningQueryBuilder.Builder()
                 .addIsInactiveCondition(false)
@@ -84,6 +73,17 @@ public class LighteningQueryEntityRepository {
                 .addIsInactiveCondition(false)
                 .addCategoryCondition(lighteningCondition.getCategory())
                 .addMyCreatedCondition(lighteningCondition.getCreatedBy())
+                .build();
+    }
+
+    private BooleanBuilder likeConditionBuilder(LighteningCondition lighteningCondition, String email) {
+        return LighteningQueryBuilder.Builder()
+                .addIsInactiveCondition(false)
+                .addCategoryCondition(lighteningCondition.getCategory())
+                .addCityCondition(lighteningCondition.getCity())
+                .addTownCondition(lighteningCondition.getTown())
+                .addTargetAtCondition(lighteningCondition.getTargetAt())
+                .addLikeCondition(email)
                 .build();
     }
 

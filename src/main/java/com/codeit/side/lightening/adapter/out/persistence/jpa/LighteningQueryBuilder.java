@@ -71,7 +71,7 @@ public class LighteningQueryBuilder {
             booleanBuilder.and(lighteningEntity.id.in(
                     JPAExpressions.select(lighteningLikeEntity.lighteningId)
                             .from(lighteningLikeEntity)
-                            .where(lighteningLikeEntity.email.eq(email))
+                            .where(lighteningLikeEntity.email.eq(email), lighteningLikeEntity.isDeleted.eq(false))
             ));
         }
         return this;
