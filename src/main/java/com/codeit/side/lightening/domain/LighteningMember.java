@@ -12,13 +12,17 @@ public class LighteningMember {
     private final Long userId;
     private final String userEmail;
     private final String userName;
+    private final String description;
+    private final boolean hasImage;
 
     public static LighteningMember from(LighteningMemberDto lighteningMemberDto) {
         return new LighteningMember(
                 lighteningMemberDto.lighteningId(),
                 lighteningMemberDto.userId(),
                 lighteningMemberDto.userEmail(),
-                lighteningMemberDto.userName()
+                lighteningMemberDto.userName(),
+                lighteningMemberDto.description(),
+                lighteningMemberDto.hasImage()
         );
     }
 

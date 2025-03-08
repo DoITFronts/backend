@@ -7,6 +7,8 @@ public record LighteningMemberResponse(
         Long userId,
         String email,
         String name,
+        String description,
+        String image,
         boolean isHost
 ) {
     public static LighteningMemberResponse from(LighteningMember lighteningMember, String hostEmail) {
@@ -15,6 +17,8 @@ public record LighteningMemberResponse(
                 lighteningMember.getUserId(),
                 lighteningMember.getUserEmail(),
                 lighteningMember.getUserName(),
+                lighteningMember.getDescription(),
+                lighteningMember.isHasImage() ? "https://codeit-doit.s3.ap-northeast-2.amazonaws.com/user/%s/image.jpg".formatted(lighteningMember.getUserId()) : "",
                 lighteningMember.isHost(hostEmail)
         );
     }

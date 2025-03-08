@@ -24,6 +24,10 @@ public record LighteningResponse(
         int participantCount,
         boolean isConfirmed,
         boolean isCompleted,
+        int minCapacity,
+        String placeName,
+        String latitude,
+        String longitude,
         List<LighteningMemberResponse> participants
 ) {
     public static LighteningResponse from(String email, LighteningInfo lighteningInfo) {
@@ -49,6 +53,10 @@ public record LighteningResponse(
                 lighteningInfo.getLighteningMembers().size(),
                 lighteningMemberResponse.size() >= lightening.getMinCapacity(),
                 lighteningMemberResponse.size() >= lightening.getCapacity(),
+                lightening.getMinCapacity(),
+                lightening.getPlaceName(),
+                lightening.getLatitude(),
+                lightening.getLongitude(),
                 lighteningMemberResponse
         );
     }

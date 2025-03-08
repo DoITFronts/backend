@@ -57,7 +57,9 @@ public class LighteningMemberEntityQueryRepository {
                         lighteningMemberEntity.lighteningId,
                         userEntity.id,
                         lighteningMemberEntity.email,
-                        userEntity.name)
+                        userEntity.name,
+                        userEntity.description,
+                        userEntity.hasImage)
                 )
                 .from(lighteningMemberEntity)
                 .innerJoin(userEntity)
@@ -89,7 +91,9 @@ public class LighteningMemberEntityQueryRepository {
                         lighteningMemberEntity.lighteningId,
                         userEntity.id,
                         lighteningMemberEntity.email,
-                        userEntity.name)
+                        userEntity.name,
+                        userEntity.description,
+                        userEntity.hasImage)
                 )
                 .from(lighteningMemberEntity)
                 .innerJoin(userEntity)
