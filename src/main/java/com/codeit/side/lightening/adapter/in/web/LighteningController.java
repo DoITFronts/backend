@@ -90,6 +90,14 @@ public class LighteningController {
         return ResponseEntity.ok(LighteningResponses.from(email, lighteningInfos));
     }
 
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
+        String email = getEmail(true);
+        lighteningUseCase.delete(email, id);
+        return ResponseEntity.ok()
+                .build();
+    }
+
     private String getEmail(boolean required) {
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
         if (required && "anonymousUser".equals(email)) {

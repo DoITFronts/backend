@@ -59,6 +59,7 @@ public class LighteningQueryEntityRepository {
 
     private BooleanBuilder listConditionBuilder(LighteningCondition lighteningCondition) {
         return LighteningQueryBuilder.Builder()
+                .addIsInactiveCondition(false)
                 .addCategoryCondition(lighteningCondition.getCategory())
                 .addCityCondition(lighteningCondition.getCity())
                 .addTownCondition(lighteningCondition.getTown())
@@ -68,6 +69,7 @@ public class LighteningQueryEntityRepository {
 
     private BooleanBuilder myCreatedConditionBuilder(LighteningCondition lighteningCondition) {
         return LighteningQueryBuilder.Builder()
+                .addIsInactiveCondition(false)
                 .addCategoryCondition(lighteningCondition.getCategory())
                 .addMyCreatedCondition(lighteningCondition.getCreatedBy())
                 .build();

@@ -40,4 +40,9 @@ public class FakeLighteningCommandRepository implements LighteningCommandReposit
     public void update(Long id, String description) {
 
     }
+
+    @Override
+    public void delete(Long id) {
+
+    }
 }

@@ -58,4 +58,9 @@ public class LighteningQueryBuilder {
         }
         return this;
     }
+
+    public LighteningQueryBuilder addIsInactiveCondition(boolean isInactive) {
+        booleanBuilder.and(lighteningEntity.isInactive.eq(isInactive));
+        return this;
+    }
 }

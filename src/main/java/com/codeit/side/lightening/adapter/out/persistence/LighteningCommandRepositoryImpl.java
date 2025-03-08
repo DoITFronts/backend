@@ -56,4 +56,10 @@ public class LighteningCommandRepositoryImpl implements LighteningCommandReposit
         lighteningJpaEntityRepository.findById(id)
                 .ifPresent(lighteningEntity -> lighteningEntity.update(description));
     }
+
+    @Override
+    public void delete(Long id) {
+        lighteningJpaEntityRepository.findById(id)
+                .ifPresent(LighteningEntity::delete);
+    }
 }

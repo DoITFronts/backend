@@ -91,6 +91,16 @@ public class LighteningService implements LighteningUseCase {
         lighteningCommandRepository.update(id, description);
     }
 
+    @Override
+    @Transactional
+    public void delete(String email, Long id) {
+        Lightening lightening = lighteningReadRepository.getById(id);
+        if (!lightening.getHostEmail().equals(email)) {
+            throw new IllegalRequestException("해당 번개의 주최자가 아닙니다. lighteningId: %s, email: %s".formatted(id, email));
+        }
+        lighteningCommandRepository.delete(id);
+    }
+
     private List<LighteningInfo> createLighteningInfos(List<Lightening> lightenings, List<LighteningMember> lighteningMembers, List<LighteningLike> lighteningLikes) {
         Map<Long, List<LighteningMember>> idToLighteningMembers = lighteningMembers.stream()
                 .collect(Collectors.groupingBy(LighteningMember::getLighteningId));

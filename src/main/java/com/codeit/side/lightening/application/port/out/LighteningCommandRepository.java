@@ -12,4 +12,6 @@ public interface LighteningCommandRepository {
     void leave(String email, Long id);
 
     void update(Long id, String description);
+
+    void delete(Long id);
 }

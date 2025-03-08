@@ -21,4 +21,6 @@ public interface LighteningUseCase {
     List<LighteningInfo> findAllBy(String email, LighteningCondition lighteningCondition);
 
     void update(String email, Long id, String description);
+
+    void delete(String email, Long id);
 }

@@ -5,6 +5,7 @@ import com.codeit.side.lightening.domain.Category;
 import com.codeit.side.lightening.domain.Lightening;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.ColumnDefault;
 
 import java.time.LocalDateTime;
 
@@ -68,6 +69,10 @@ public class LighteningEntity extends BaseEntity {
     @Column(name = "longitude", nullable = false)
     private String longitude;
 
+    @Column(name = "is_inactive", nullable = false)
+    @ColumnDefault("false")
+    private Boolean isInactive;
+
     public static LighteningEntity from(String email, Lightening lightening) {
         return LighteningEntity.builder()
                 .title(lightening.getTitle())
@@ -116,5 +121,9 @@ public class LighteningEntity extends BaseEntity {
 
     public void update(String description) {
         this.description = description;
+    }
+
+    public void delete() {
+        this.isInactive = true;
     }
 }

@@ -27,7 +27,7 @@ public class LighteningReadRepositoryImpl implements LighteningReadRepository {
 
     @Override
     public Lightening getById(Long lighteningId) {
-        return lighteningJpaEntityRepository.findById(lighteningId)
+        return lighteningJpaEntityRepository.findByIdAndIsInactiveIsFalse(lighteningId)
                 .orElseThrow(() -> new LighteningNotFoundException(lighteningId))
                 .toDomain();
     }
