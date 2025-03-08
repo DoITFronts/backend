@@ -2,6 +2,7 @@ package com.codeit.side.lightening.adapter.out.persistence.jpa;
 
 import com.codeit.side.lightening.domain.Category;
 import com.querydsl.core.BooleanBuilder;
+import com.querydsl.jpa.JPAExpressions;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -9,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import java.time.LocalDateTime;
 
 import static com.codeit.side.lightening.adapter.out.persistence.entity.QLighteningEntity.lighteningEntity;
+import static com.codeit.side.lightening.adapter.out.persistence.entity.QLighteningLikeEntity.lighteningLikeEntity;
 
 @Getter
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
@@ -61,6 +63,17 @@ public class LighteningQueryBuilder {
 
     public LighteningQueryBuilder addIsInactiveCondition(boolean isInactive) {
         booleanBuilder.and(lighteningEntity.isInactive.eq(isInactive));
+        return this;
+    }
+
+    public LighteningQueryBuilder addLikeCondition(String email) {
+        if (email != null) {
+            booleanBuilder.and(lighteningEntity.id.in(
+                    JPAExpressions.select(lighteningLikeEntity.lighteningId)
+                            .from(lighteningLikeEntity)
+                            .where(lighteningLikeEntity.email.eq(email))
+            ));
+        }
         return this;
     }
 }

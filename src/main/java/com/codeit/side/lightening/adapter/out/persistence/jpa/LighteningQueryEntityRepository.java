@@ -22,8 +22,8 @@ import static com.codeit.side.lightening.adapter.out.persistence.entity.QLighten
 public class LighteningQueryEntityRepository {
     private final JPAQueryFactory jpaQueryFactory;
 
-    public List<LighteningEntity> findAllBy(LighteningCondition lighteningCondition) {
-        BooleanBuilder booleanBuilder = createQueryBuilder(lighteningCondition);
+    public List<LighteningEntity> findAllBy(LighteningCondition lighteningCondition, String email) {
+        BooleanBuilder booleanBuilder = createQueryBuilder(lighteningCondition, email);
 
         if ("END_DESC".equals(lighteningCondition.getLighteningOrder())) {
             booleanBuilder.and(lighteningEntity.endAt.after(LocalDateTime.now()));
@@ -50,11 +50,23 @@ public class LighteningQueryEntityRepository {
         };
     }
 
-    private BooleanBuilder createQueryBuilder(LighteningCondition lighteningCondition) {
+    private BooleanBuilder createQueryBuilder(LighteningCondition lighteningCondition, String email) {
         return switch (lighteningCondition.getConditionType()) {
             case LIST -> listConditionBuilder(lighteningCondition);
             case MY_CREATED -> myCreatedConditionBuilder(lighteningCondition);
+            case LIKE -> likeConditionBuilder(lighteningCondition, email);
         };
+    }
+
+    private BooleanBuilder likeConditionBuilder(LighteningCondition lighteningCondition, String email) {
+        return LighteningQueryBuilder.Builder()
+                .addIsInactiveCondition(false)
+                .addCategoryCondition(lighteningCondition.getCategory())
+                .addCityCondition(lighteningCondition.getCity())
+                .addTownCondition(lighteningCondition.getTown())
+                .addTargetAtCondition(lighteningCondition.getTargetAt())
+                .addLikeCondition(email)
+                .build();
     }
 
     private BooleanBuilder listConditionBuilder(LighteningCondition lighteningCondition) {

@@ -56,8 +56,8 @@ public class LighteningReadRepositoryImpl implements LighteningReadRepository {
     }
 
     @Override
-    public List<Lightening> findAllBy(LighteningCondition lighteningCondition) {
-        return lighteningQueryEntityRepository.findAllBy(lighteningCondition)
+    public List<Lightening> findAllBy(LighteningCondition lighteningCondition, String email) {
+        return lighteningQueryEntityRepository.findAllBy(lighteningCondition, email)
                 .stream()
                 .map(LighteningEntity::toDomain)
                 .toList();

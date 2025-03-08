@@ -72,7 +72,7 @@ public class LighteningService implements LighteningUseCase {
 
     @Override
     public List<LighteningInfo> findAllBy(String email, LighteningCondition lighteningCondition) {
-        List<Lightening> lightenings = lighteningReadRepository.findAllBy(lighteningCondition);
+        List<Lightening> lightenings = lighteningReadRepository.findAllBy(lighteningCondition, email);
         List<Long> lighteningIds = lightenings.stream()
                 .map(Lightening::getId)
                 .toList();

@@ -98,6 +98,22 @@ public class LighteningController {
                 .build();
     }
 
+    @GetMapping("/like")
+    public ResponseEntity<LighteningResponses> getLikeLightenings(
+            @RequestParam(required = false) String category,
+            @RequestParam(required = false) String city,
+            @RequestParam(required = false) String town,
+            @RequestParam(required = false) LocalDateTime targetAt,
+            @RequestParam(required = false, defaultValue = "1") Integer page,
+            @RequestParam(required = false, defaultValue = "10") Integer size,
+            @RequestParam(required = false, defaultValue = "CREATED_DESC") String order
+    ) {
+        String email = getEmail(true);
+        LighteningCondition lighteningCondition = LighteningCondition.of(ConditionType.LIKE, category, city, town, targetAt, LighteningPaging.of(page, size), order, null);
+        List<LighteningInfo> lighteningInfos = lighteningUseCase.findAllBy(email, lighteningCondition);
+        return ResponseEntity.ok(LighteningResponses.from(email, lighteningInfos));
+    }
+
     private String getEmail(boolean required) {
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
         if (required && "anonymousUser".equals(email)) {
