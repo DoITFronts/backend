@@ -38,7 +38,7 @@ public class ChatMessageService implements ChatMessageUseCase {
 
     @Override
     @Transactional
-    public ChatRoom joinChatRoom(String email, ChatRoomCommand chatRoomCommand) {
+    public ChatRoom createChatRoom(String email, ChatRoomCommand chatRoomCommand) {
         User host = userQueryRepository.getByEmail(email)
                 .toDomain();
         List<User> users = userQueryRepository.findByIds(chatRoomCommand.getUserIds());
@@ -83,6 +83,18 @@ public class ChatMessageService implements ChatMessageUseCase {
                 .limit(size)
                 .toList();
         return ChatMessages.of(messages, isLast);
+    }
+
+    @Override
+    @Transactional
+    public void joinChatRoom(Long id, String email) {
+        User user = userQueryRepository.getByEmail(email)
+                .toDomain();
+        ChatRoom chatRoom = chatRoomRepository.getBy(id);
+        if (chatMemberRepository.existsByChatRoomIdAndUserId(chatRoom.getId(), user.getId())) {
+            throw new IllegalRequestException("이미 채팅방에 참여하고 있는 사용자입니다.");
+        }
+        chatMemberRepository.join(id, user.getId());
     }
 
     private List<ChatRoomInfo> createChatRoomInfos(List<ChatRoom> chatRooms, Map<Long, ChatMessage> allLastMessageByIds, Map<Long, Integer> idToMemberSize) {

@@ -2,7 +2,6 @@ package com.codeit.side.chat.adapter.out.persistence;
 
 import com.codeit.side.chat.adapter.out.persistence.entity.ChatMemberEntity;
 import com.codeit.side.chat.adapter.out.persistence.jpa.ChatMemberJpaRepository;
-import com.codeit.side.chat.adapter.out.persistence.jpa.ChatRoomJpaRepository;
 import com.codeit.side.chat.application.port.out.ChatMemberRepository;
 import com.codeit.side.chat.domain.command.ChatRoomCommand;
 import lombok.RequiredArgsConstructor;
@@ -17,7 +16,6 @@ import java.util.stream.Stream;
 @RequiredArgsConstructor
 public class ChatMemberRepositoryImpl implements ChatMemberRepository {
     private final ChatMemberJpaRepository chatMemberJpaRepository;
-    private final ChatRoomJpaRepository chatRoomJpaRepository;
 
     @Override
     public void save(Long id, ChatRoomCommand chatRoomCommand) {
@@ -44,5 +42,10 @@ public class ChatMemberRepositoryImpl implements ChatMemberRepository {
     public boolean existsByChatRoomIdAndUserId(Long id, Long userId) {
         return chatMemberJpaRepository.findByChatRoomIdAndUserId(id, userId)
                 .isPresent();
+    }
+
+    @Override
+    public void join(Long id, Long userId) {
+        chatMemberJpaRepository.save(ChatMemberEntity.of(id, userId));
     }
 }

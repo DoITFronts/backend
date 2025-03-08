@@ -24,11 +24,18 @@ public class ChatController {
     private final ChatMessageUseCase chatMessageUseCase;
 
     @PostMapping("/rooms")
-    public ResponseEntity<ChatRoomCreateResponse> joinChatRoom(@RequestBody ChatRequest chatRequest) {
+    public ResponseEntity<ChatRoomCreateResponse> createChatRoom(@RequestBody ChatRequest chatRequest) {
         String email = getEmail();
         ChatRoomCommand chatRoomCommand = chatRequest.toCommand();
-        ChatRoom chatRoom = chatMessageUseCase.joinChatRoom(email, chatRoomCommand);
+        ChatRoom chatRoom = chatMessageUseCase.createChatRoom(email, chatRoomCommand);
         return ResponseEntity.ok(ChatRoomCreateResponse.from(chatRoom.getId()));
+    }
+
+    @PostMapping("/rooms/{id}/join")
+    public ResponseEntity<Void> joinChatRoom(@PathVariable Long id) {
+        String email = getEmail();
+        chatMessageUseCase.joinChatRoom(id, email);
+        return ResponseEntity.ok().build();
     }
 
     @GetMapping("/rooms")

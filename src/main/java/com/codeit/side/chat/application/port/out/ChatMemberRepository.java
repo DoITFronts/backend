@@ -11,4 +11,6 @@ public interface ChatMemberRepository {
     Map<Long, Integer> findAllMemberCountByIds(List<Long> chatRoomIds);
 
     boolean existsByChatRoomIdAndUserId(Long id, Long userId);
+
+    void join(Long id, Long userId);
 }

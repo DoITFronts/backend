@@ -11,11 +11,13 @@ import java.util.List;
 public interface ChatMessageUseCase {
     void save(ChatMessage chatMessage);
 
-    ChatRoom joinChatRoom(String email, ChatRoomCommand chatRoomCommand);
+    ChatRoom createChatRoom(String email, ChatRoomCommand chatRoomCommand);
 
     List<ChatRoomInfo> findAllChatRooms(String email);
 
     void findChatRoomBy(Long id, Long userId);
 
     ChatMessages findAllMessagesByRoomId(Long roomId, String email, Long offset, Integer size);
+
+    void joinChatRoom(Long id, String email);
 }
