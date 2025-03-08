@@ -29,4 +29,14 @@ public class ReviewJpaQueryRepository {
                 .fetch()
                 .size();
     }
+
+    public boolean existsByLighteningIdAndUserId(Long lighteningId, Long userId) {
+        return queryFactory.selectOne()
+                .from(reviewEntity)
+                .where(
+                        reviewEntity.lighteningId.eq(lighteningId),
+                        reviewEntity.userId.eq(userId)
+                )
+                .fetchFirst() != null;
+    }
 }

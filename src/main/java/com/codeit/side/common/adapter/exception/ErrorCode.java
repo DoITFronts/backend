@@ -13,7 +13,9 @@ public enum ErrorCode {
     ALREADY_JOINED(40901, "이미 참여한 번개입니다."),
     ALREADY_FULL(40902, "이미 참여인원이 꽉 찼습니다."),
     NOT_JOINED(40903, "참여한 번개가 아닙니다."),
-    UNAUTHORIZED(40301, "JWT 토큰을 확인해주세요.");
+    UNAUTHORIZED(40301, "JWT 토큰을 확인해주세요."),
+    ALREADY_REVIEWED(40904, "이미 리뷰를 작성한 번개입니다.")
+    ;
 
     private final int code;
     private final String message;

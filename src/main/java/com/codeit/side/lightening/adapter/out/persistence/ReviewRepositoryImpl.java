@@ -1,5 +1,7 @@
 package com.codeit.side.lightening.adapter.out.persistence;
 
+import com.codeit.side.common.adapter.exception.AlreadyReviewedLighteningException;
+import com.codeit.side.common.adapter.exception.UserAlreadyJoinedException;
 import com.codeit.side.lightening.adapter.out.persistence.entity.ReviewEntity;
 import com.codeit.side.lightening.adapter.out.persistence.jpa.ReviewJpaQueryRepository;
 import com.codeit.side.lightening.adapter.out.persistence.jpa.ReviewJpaRepository;
@@ -19,6 +21,9 @@ public class ReviewRepositoryImpl implements ReviewRepository {
 
     @Override
     public Review save(ReviewCommand reviewCommand) {
+        if (reviewJpaQueryRepository.existsByLighteningIdAndUserId(reviewCommand.getLighteningId(), reviewCommand.getUserId())) {
+            throw new AlreadyReviewedLighteningException();
+        }
         ReviewEntity reviewEntity = ReviewEntity.from(reviewCommand);
         return reviewJpaRepository.save(reviewEntity)
                 .toDomain();
