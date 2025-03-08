@@ -34,9 +34,22 @@ public record LighteningRequest(
         LocalDateTime endAt,
 
         @NotNull(message = "capacity는 필수입니다.")
-        @Min(value = 5, message = "5 이상 20 이하만 가능합니다.")
-        @Max(value = 20, message = "5 이상 20 이하만 가능합니다.")
-        Integer capacity
+        @Max(value = 20, message = "20 이하만 가능합니다.")
+        Integer capacity,
+
+        @NotNull(message = "minCapacity는 필수입니다.")
+        @Min(value = 1, message = "1 이상 5이하만 가능합니다.")
+        @Max(value = 5, message = "1 이상 5이하만 가능합니다.")
+        Integer minCapacity,
+
+        @NotNull(message = "placeName은 필수입니다.")
+        String placeName,
+
+        @NotNull(message = "latitude는 필수입니다.")
+        String latitude,
+
+        @NotNull(message = "longitude는 필수입니다.")
+        String longitude
 ) {
     public Lightening toModel(boolean hasImage) {
         return Lightening.of(
@@ -49,7 +62,11 @@ public record LighteningRequest(
                 targetAt,
                 endAt,
                 capacity,
-                hasImage
+                hasImage,
+                minCapacity,
+                placeName,
+                latitude,
+                longitude
         );
     }
 }

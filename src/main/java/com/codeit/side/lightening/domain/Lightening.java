@@ -1,5 +1,6 @@
 package com.codeit.side.lightening.domain;
 
+import com.codeit.side.common.adapter.exception.IllegalRequestException;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -21,6 +22,10 @@ public class Lightening {
     private final Integer capacity;
     private final Boolean hasImage;
     private final String hostEmail;
+    private final Integer minCapacity;
+    private final String placeName;
+    private final String latitude;
+    private final String longitude;
 
     public static Lightening of(
             String title,
@@ -32,9 +37,13 @@ public class Lightening {
             LocalDateTime targetAt,
             LocalDateTime endAt,
             Integer capacity,
-            Boolean hasImage
+            Boolean hasImage,
+            Integer minCapacity,
+            String placeName,
+            String latitude,
+            String longitude
     ){
-        return of(null, title, summary, address, city, town, category, targetAt, endAt, capacity, hasImage, null);
+        return of(null, title, summary, address, city, town, category, targetAt, endAt, capacity, hasImage, null, minCapacity, placeName, latitude, longitude);
     }
 
     public static Lightening of(
@@ -49,9 +58,20 @@ public class Lightening {
             LocalDateTime endAt,
             Integer capacity,
             Boolean hasImage,
-            String hostEmail
+            String hostEmail,
+            Integer minCapacity,
+            String placeName,
+            String latitude,
+            String longitude
     ){
-        return new Lightening(id, title, summary, address, city, town, category, targetAt, endAt, capacity, hasImage, hostEmail);
+        validateCapacity(capacity, minCapacity);
+        return new Lightening(id, title, summary, address, city, town, category, targetAt, endAt, capacity, hasImage, hostEmail, minCapacity, placeName, latitude, longitude);
+    }
+
+    private static void validateCapacity(Integer capacity, Integer minCapacity) {
+        if (minCapacity > capacity) {
+            throw new IllegalRequestException("minCapacity는 capacity보다 작거나 같아야 합니다.");
+        }
     }
 
     public boolean isNotJoinable(int currentMemberCount) {

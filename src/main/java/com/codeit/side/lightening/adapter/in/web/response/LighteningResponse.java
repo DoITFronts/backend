@@ -47,7 +47,7 @@ public record LighteningResponse(
                 lighteningMemberResponse.stream().anyMatch(member -> member.email().equals(email)),
                 lightening.getCapacity(),
                 lighteningInfo.getLighteningMembers().size(),
-                lighteningMemberResponse.size() >= 5,
+                lighteningMemberResponse.size() >= lightening.getMinCapacity(),
                 lighteningMemberResponse.size() >= lightening.getCapacity(),
                 lighteningMemberResponse
         );

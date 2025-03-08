@@ -56,6 +56,18 @@ public class LighteningEntity extends BaseEntity {
     @Column(name = "host", nullable = false)
     private String host;
 
+    @Column(name = "min_capacity", nullable = false)
+    private Integer minCapacity;
+
+    @Column(name = "place_name", nullable = false)
+    private String placeName;
+
+    @Column(name = "latitude", nullable = false)
+    private String latitude;
+
+    @Column(name = "longitude", nullable = false)
+    private String longitude;
+
     public static LighteningEntity from(String email, Lightening lightening) {
         return LighteningEntity.builder()
                 .title(lightening.getTitle())
@@ -69,10 +81,14 @@ public class LighteningEntity extends BaseEntity {
                 .capacity(lightening.getCapacity())
                 .hasImage(lightening.getHasImage())
                 .host(email)
+                .minCapacity(lightening.getMinCapacity())
+                .placeName(lightening.getPlaceName())
+                .latitude(lightening.getLatitude())
+                .longitude(lightening.getLongitude())
                 .build();
     }
 
     public Lightening toDomain() {
-        return Lightening.of(id, title, summary, address, city, town, category, targetAt, endAt, capacity, hasImage, host);
+        return Lightening.of(id, title, summary, address, city, town, category, targetAt, endAt, capacity, hasImage, host, minCapacity, placeName, latitude, longitude);
     }
 }
