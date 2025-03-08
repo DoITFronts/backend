@@ -21,4 +21,9 @@ public class FakeUserCommandRepository implements UserCommandRepository {
         users.add(user);
         return user;
     }
+
+    @Override
+    public User updateUser(String email, String description, boolean hasImage) {
+        return null;
+    }
 }

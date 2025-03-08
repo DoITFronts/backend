@@ -29,6 +29,7 @@ public class LighteningService implements LighteningUseCase {
     @Override
     @Transactional
     public Lightening save(String email, Lightening lightening, MultipartFile image) {
+        fileUploader.validateImage(image);
         Lightening savedLightening = lighteningCommandRepository.save(email, lightening);
         lighteningCommandRepository.join(email, savedLightening.getId());
         fileUploader.uploadImageToS3(image, "lightening/" + savedLightening.getId(), "image.jpg", "jpg");

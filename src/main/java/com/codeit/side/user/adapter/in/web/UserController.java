@@ -10,10 +10,8 @@ import com.codeit.side.user.domain.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -29,6 +27,13 @@ public class UserController {
         String email = getEmail();
         User user = userUseCase.getUser(email);
         return ResponseEntity.ok(UserResponse.from(user));
+    }
+
+    @PostMapping("/user")
+    public ResponseEntity<UserResponse> updateUser(@RequestPart(required = false) MultipartFile image, @RequestPart String description) {
+        String email = getEmail();
+        User updatedUser = userUseCase.updateUser(image, email, description);
+        return ResponseEntity.ok(UserResponse.from(updatedUser));
     }
 
     @GetMapping("/lightening/created")

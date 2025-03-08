@@ -14,7 +14,11 @@ public class LighteningFixture {
                 LocalDateTime.of(2021, 1, 1, 0, 0),
                 LocalDateTime.of(2021, 1, 2, 0, 0),
                 100,
-                false
+                false,
+                null,
+                null,
+                null,
+                null
         );
     }
 
@@ -31,6 +35,10 @@ public class LighteningFixture {
                 lightening.getEndAt(),
                 lightening.getCapacity(),
                 false,
+                null,
+                null,
+                null,
+                null,
                 null
         );
     }

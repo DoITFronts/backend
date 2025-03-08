@@ -24,7 +24,7 @@ class UserJoinServiceTest {
     @DisplayName("유저 생성 서비스는 유저를 생성해서 응답한다.")
     void createUserReturnsUser() {
         //given
-        UserService userJoinService = new UserService(new FakeUserQueryRepository(), new FakeUserCommandRepository(), new FakeCustomPasswordEncoder());
+        UserService userJoinService = new UserService(new FakeUserQueryRepository(), new FakeUserCommandRepository(), new FakeCustomPasswordEncoder(), null);
         UserCommand user = UserCommandFixture.create("bht9011@gmail.com", "password~", "박병훈", "byung123", LocalDate.now());
         //when
         //then
@@ -43,7 +43,7 @@ class UserJoinServiceTest {
         List<User> users = new ArrayList<>();
         FakeUserQueryRepository userQueryRepository = new FakeUserQueryRepository(users);
         FakeUserCommandRepository userCommandRepository = new FakeUserCommandRepository(users);
-        UserService userJoinService = new UserService(userQueryRepository, userCommandRepository ,new FakeCustomPasswordEncoder());
+        UserService userJoinService = new UserService(userQueryRepository, userCommandRepository ,new FakeCustomPasswordEncoder(), null);
         UserCommand user = UserCommandFixture.create(email, "password~", "박병훈", "byung123", LocalDate.now());
         userJoinService.create(user);
         //when
@@ -61,7 +61,7 @@ class UserJoinServiceTest {
         FakeUserQueryRepository userQueryRepository = new FakeUserQueryRepository(users);
         FakeUserCommandRepository userCommandRepository = new FakeUserCommandRepository(users);
         FakeCustomPasswordEncoder encoder = new FakeCustomPasswordEncoder();
-        UserService userJoinService = new UserService(userQueryRepository, userCommandRepository, encoder);
+        UserService userJoinService = new UserService(userQueryRepository, userCommandRepository, encoder, null);
         UserCommand user = UserCommandFixture.create(email, "password~", "박병훈", "byung123", LocalDate.of(1999, 9, 11));
         //when
         User actual = userJoinService.create(user);

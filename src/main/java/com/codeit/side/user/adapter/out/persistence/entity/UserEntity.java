@@ -3,6 +3,7 @@ package com.codeit.side.user.adapter.out.persistence.entity;
 import com.codeit.side.user.domain.User;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.ColumnDefault;
 
 import java.time.LocalDate;
 
@@ -33,6 +34,13 @@ public class UserEntity {
     @Column(name = "birth", nullable = false)
     private LocalDate birth;
 
+    @Column(name = "description")
+    private String description;
+
+    @Column(name = "has_image", nullable = false)
+    @ColumnDefault("false")
+    private Boolean hasImage;
+
     public static UserEntity from(User user) {
         return UserEntity.builder()
                 .email(user.getEmail())
@@ -44,6 +52,14 @@ public class UserEntity {
     }
 
     public User toDomain() {
-        return User.of(id, email, password, name, nickname, birth);
+        return User.of(id, email, password, name, nickname, birth, description, hasImage);
+    }
+
+    public UserEntity update(String description, boolean hasImage) {
+        this.description = description;
+        if (hasImage) {
+            this.hasImage = true;
+        }
+        return this;
     }
 }

@@ -1,5 +1,6 @@
 package com.codeit.side.user.adapter.out.persistence;
 
+import com.codeit.side.common.adapter.exception.UserNotFoundException;
 import com.codeit.side.user.adapter.out.persistence.entity.UserEntity;
 import com.codeit.side.user.adapter.out.persistence.jpa.UserJpaRepository;
 import com.codeit.side.user.application.port.out.UserCommandRepository;
@@ -17,4 +18,13 @@ public class UserCommandRepositoryImpl implements UserCommandRepository {
         return userJpaRepository.save(UserEntity.from(user))
                 .toDomain();
     }
+
+    @Override
+    public User updateUser(String email, String description, boolean hasImage) {
+        return userJpaRepository.findByEmail(email)
+                .orElseThrow(UserNotFoundException::new)
+                .update(description, hasImage)
+                .toDomain();
+    }
+
 }

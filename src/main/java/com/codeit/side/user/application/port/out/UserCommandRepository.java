@@ -4,4 +4,6 @@ import com.codeit.side.user.domain.User;
 
 public interface UserCommandRepository {
     User saveUser(User user);
+
+    User updateUser(String email, String description, boolean hasImage);
 }
