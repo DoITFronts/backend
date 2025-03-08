@@ -44,6 +44,6 @@ public class UserEntity {
     }
 
     public User toDomain() {
-        return User.of(email, password, name, nickname, birth);
+        return User.of(id, email, password, name, nickname, birth);
     }
 }

@@ -1,6 +1,7 @@
 package com.codeit.side.common.adapter.out.security;
 
-import com.codeit.side.user.adapter.out.persistence.entity.UserEntity;
+import com.codeit.side.user.domain.User;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -8,9 +9,10 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.util.Collection;
 import java.util.List;
 
+@Getter
 @RequiredArgsConstructor
 public class CustomUserDetails implements UserDetails {
-    private final UserEntity userEntity;
+    private final User user;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -19,19 +21,19 @@ public class CustomUserDetails implements UserDetails {
 
     @Override
     public String getPassword() {
-        return userEntity.getPassword();
+        return user.getPassword();
     }
 
     @Override
     public String getUsername() {
-        return userEntity.getEmail();
+        return user.getEmail();
     }
 
     public Long getId() {
-        return userEntity.getId();
+        return user.getId();
     }
 
     public String getNickname() {
-        return userEntity.getNickname();
+        return user.getNickname();
     }
 }
