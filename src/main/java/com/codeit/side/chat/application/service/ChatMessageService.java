@@ -41,7 +41,7 @@ public class ChatMessageService implements ChatMessageUseCase {
     public ChatRoom createChatRoom(String email, ChatRoomCommand chatRoomCommand) {
         User host = userQueryRepository.getByEmail(email)
                 .toDomain();
-        List<User> users = userQueryRepository.findByIds(chatRoomCommand.getUserIds());
+        List<User> users = userQueryRepository.getAllByIds(chatRoomCommand.getUserIds());
         List<Long> userIds = users.stream()
                 .map(User::getId)
                 .toList();

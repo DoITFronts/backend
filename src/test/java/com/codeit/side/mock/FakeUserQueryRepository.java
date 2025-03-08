@@ -29,7 +29,7 @@ public class FakeUserQueryRepository implements UserQueryRepository {
     }
 
     @Override
-    public List<User> findByIds(List<Long> ids) {
+    public List<User> getAllByIds(List<Long> ids) {
         return List.of();
     }
 }

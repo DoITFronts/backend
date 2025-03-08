@@ -27,13 +27,21 @@ public class UserQueryRepositoryImpl implements UserQueryRepository {
     }
 
     @Override
-    public List<User> findByIds(List<Long> ids) {
+    public List<User> getAllByIds(List<Long> ids) {
         List<UserEntity> userEntities = userJpaRepository.findAllById(ids);
         if (ids.size() != userEntities.size()) {
             List<Long> missingIds = extractMissingIds(ids, userEntities);
             throw new UserNotFoundException(missingIds);
         }
         return userEntities.stream()
+                .map(UserEntity::toDomain)
+                .toList();
+    }
+
+    @Override
+    public List<User> findAllByIds(List<Long> userIds) {
+        return userJpaRepository.findAllById(userIds)
+                .stream()
                 .map(UserEntity::toDomain)
                 .toList();
     }
