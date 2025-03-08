@@ -11,4 +11,8 @@ public interface ReviewRepository {
     List<Review> findAllByLighteningId(Long id, Integer page, Integer size);
 
     int getTotalCountByLighteningId(Long id);
+
+    List<Review> findAllBy(Long userId, String category, Integer size, Integer page);
+
+    int countAllBy(Long userId, String category);
 }

@@ -1,12 +1,14 @@
 package com.codeit.side.lightening.adapter.out.persistence.jpa;
 
 import com.codeit.side.lightening.adapter.out.persistence.entity.ReviewEntity;
+import com.codeit.side.lightening.domain.Category;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+import static com.codeit.side.lightening.adapter.out.persistence.entity.QLighteningEntity.lighteningEntity;
 import static com.codeit.side.lightening.adapter.out.persistence.entity.QReviewEntity.reviewEntity;
 
 @Repository
@@ -38,5 +40,25 @@ public class ReviewJpaQueryRepository {
                         reviewEntity.userId.eq(userId)
                 )
                 .fetchFirst() != null;
+    }
+
+    public List<ReviewEntity> findAllBy(Long userId, String category, Integer size, Integer page) {
+        return queryFactory.selectFrom(reviewEntity)
+                .innerJoin(lighteningEntity)
+                .on(reviewEntity.lighteningId.eq(lighteningEntity.id), lighteningEntity.category.eq(Category.from(category)), lighteningEntity.isInactive.eq(false))
+                .where(reviewEntity.userId.eq(userId))
+                .orderBy(reviewEntity.createdAt.desc())
+                .offset((long) (page - 1) * size)
+                .limit(size)
+                .fetch();
+    }
+
+    public int countAllBy(Long userId, String category) {
+        return queryFactory.selectFrom(reviewEntity)
+                .innerJoin(lighteningEntity)
+                .on(reviewEntity.lighteningId.eq(lighteningEntity.id), lighteningEntity.category.eq(Category.from(category)), lighteningEntity.isInactive.eq(false))
+                .where(reviewEntity.userId.eq(userId))
+                .fetch()
+                .size();
     }
 }

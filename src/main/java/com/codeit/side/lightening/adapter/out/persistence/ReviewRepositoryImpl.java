@@ -1,7 +1,6 @@
 package com.codeit.side.lightening.adapter.out.persistence;
 
 import com.codeit.side.common.adapter.exception.AlreadyReviewedLighteningException;
-import com.codeit.side.common.adapter.exception.UserAlreadyJoinedException;
 import com.codeit.side.lightening.adapter.out.persistence.entity.ReviewEntity;
 import com.codeit.side.lightening.adapter.out.persistence.jpa.ReviewJpaQueryRepository;
 import com.codeit.side.lightening.adapter.out.persistence.jpa.ReviewJpaRepository;
@@ -40,5 +39,18 @@ public class ReviewRepositoryImpl implements ReviewRepository {
     @Override
     public int getTotalCountByLighteningId(Long id) {
         return reviewJpaQueryRepository.getTotalCountByLighteningId(id);
+    }
+
+    @Override
+    public List<Review> findAllBy(Long userId, String category, Integer size, Integer page) {
+        return reviewJpaQueryRepository.findAllBy(userId, category, size, page)
+                .stream()
+                .map(ReviewEntity::toDomain)
+                .toList();
+    }
+
+    @Override
+    public int countAllBy(Long userId, String category) {
+        return reviewJpaQueryRepository.countAllBy(userId, category);
     }
 }

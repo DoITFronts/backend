@@ -18,6 +18,8 @@ public interface LighteningReadRepository {
 
     boolean findLighteningLikeBy(String email, Long id);
 
+    List<Lightening> findAllBy(List<Long> lighteningIds);
+
     List<Lightening> findAllBy(LighteningCondition lighteningCondition, String email);
 
     List<LighteningMember> findAllMembersBy(List<Long> id);
