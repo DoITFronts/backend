@@ -10,5 +10,7 @@ public interface UserQueryRepository {
 
     UserEntity getByEmail(String email);
 
-    List<User> findByIds(List<Long> ids);
+    List<User> getAllByIds(List<Long> ids);
+
+    List<User> findAllByIds(List<Long> userIds);
 }
