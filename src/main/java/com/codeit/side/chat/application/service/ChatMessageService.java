@@ -5,6 +5,7 @@ import com.codeit.side.chat.application.port.out.ChatMemberRepository;
 import com.codeit.side.chat.application.port.out.ChatMessageRepository;
 import com.codeit.side.chat.application.port.out.ChatRoomRepository;
 import com.codeit.side.chat.domain.ChatMessage;
+import com.codeit.side.chat.domain.ChatMessages;
 import com.codeit.side.chat.domain.ChatRoom;
 import com.codeit.side.chat.domain.ChatRoomInfo;
 import com.codeit.side.chat.domain.command.ChatRoomCommand;
@@ -30,22 +31,24 @@ public class ChatMessageService implements ChatMessageUseCase {
     private final ChatMemberRepository chatMemberRepository;
 
     @Override
+    @Transactional
     public void save(ChatMessage chatMessage) {
         chatMessageRepository.save(chatMessage);
     }
 
     @Override
     @Transactional
-    public void joinChatRoom(String email, ChatRoomCommand chatRoomCommand) {
+    public ChatRoom joinChatRoom(String email, ChatRoomCommand chatRoomCommand) {
         User host = userQueryRepository.getByEmail(email)
                 .toDomain();
         List<User> users = userQueryRepository.findByIds(chatRoomCommand.getUserIds());
         List<Long> userIds = users.stream()
                 .map(User::getId)
                 .toList();
-        ChatRoomCommand chatRoom = ChatRoomCommand.of(chatRoomCommand.getName(), host.getId(), userIds);
-        Long chatRoomId = chatRoomRepository.save(chatRoom);
-        chatMemberRepository.save(chatRoomId, chatRoom);
+        ChatRoomCommand userChatRoomCommand = ChatRoomCommand.of(chatRoomCommand.getName(), host.getId(), userIds);
+        ChatRoom chatRoom = chatRoomRepository.save(userChatRoomCommand);
+        chatMemberRepository.save(chatRoom.getId(), userChatRoomCommand);
+        return chatRoom;
     }
 
     @Override
@@ -64,9 +67,22 @@ public class ChatMessageService implements ChatMessageUseCase {
     @Override
     public void findChatRoomBy(Long id, Long userId) {
         ChatRoom chatRoom = chatRoomRepository.getBy(id);
-        if (!chatMemberRepository.existsByChatRoomIdAndUserId(id, userId)) {
+        if (!chatMemberRepository.existsByChatRoomIdAndUserId(chatRoom.getId(), userId)) {
             throw new IllegalRequestException("채팅방에 참여하지 않은 사용자입니다.");
         }
+    }
+
+    @Override
+    public ChatMessages findAllMessagesByRoomId(Long roomId, String email, Long offset, Integer size) {
+        User user = userQueryRepository.getByEmail(email)
+                .toDomain();
+        findChatRoomBy(roomId, user.getId());
+        List<ChatMessage> chatMessages = chatMessageRepository.findAllByRoomId(roomId, offset, size);
+        boolean isLast = chatMessages.size() <= size;
+        List<ChatMessage> messages = chatMessages.stream()
+                .limit(size)
+                .toList();
+        return ChatMessages.of(messages, isLast);
     }
 
     private List<ChatRoomInfo> createChatRoomInfos(List<ChatRoom> chatRooms, Map<Long, ChatMessage> allLastMessageByIds, Map<Long, Integer> idToMemberSize) {

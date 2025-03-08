@@ -34,21 +34,12 @@ public class ChatRepositoryImpl implements ChatMessageRepository {
                 .collect(Collectors.toMap(ChatMessageEntity::getChatRoomId, ChatMessageEntity::toDomain));
     }
 
-//    @Override
-//    @Transactional(readOnly = true)
-//    public ChatMessage loadRecentChat(Long bookClubId) {
-//        return chatMessageRepository
-//                .findTopByBookClubIdOrderByDateDesc(bookClubId)
-//                .orElse(new ChatMessageEntity())
-//                .toDomain();
-//    }
-//
-//    @Override
-//    @Transactional(readOnly = true)
-//    public List<ChatMessage> loadAllChat(Long bookClubId) {
-//        return chatMessageRepository
-//                .findByBookClubId(bookClubId)
-//                .orElse(new ArrayList<>())
-//                .stream().map(ChatMessageEntity::toDomain).toList();
-//    }
+    @Override
+    public List<ChatMessage> findAllByRoomId(Long roomId, Long offset, Integer size) {
+        return chatMessageQueryRepository.findAllByRoomId(roomId, offset, size)
+                .stream()
+                .map(ChatMessageEntity::toDomain)
+                .toList();
+    }
+
 }

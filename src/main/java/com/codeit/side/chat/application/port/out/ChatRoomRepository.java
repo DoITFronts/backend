@@ -6,7 +6,7 @@ import com.codeit.side.chat.domain.command.ChatRoomCommand;
 import java.util.List;
 
 public interface ChatRoomRepository {
-    Long save(ChatRoomCommand chatRoomCommand);
+    ChatRoom save(ChatRoomCommand chatRoomCommand);
 
     List<ChatRoom> findAllByUserId(Long id);
 

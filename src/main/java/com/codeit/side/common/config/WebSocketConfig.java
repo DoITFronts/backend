@@ -22,6 +22,8 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
                 .setSuppressCors(true);
     }
 
+    //TODO 웹소켓 에러처리
+    //https://jaeseo0519.tistory.com/414
     /**
      * 개인메시지는 '/queue/private/{userId} 로 라우팅
      * 수신자는 '/user/queue/private/{userId}'를 구독
@@ -32,5 +34,4 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
         registry.enableSimpleBroker("/topic", "/queue");
         registry.setApplicationDestinationPrefixes("/app");
     }
-
 }

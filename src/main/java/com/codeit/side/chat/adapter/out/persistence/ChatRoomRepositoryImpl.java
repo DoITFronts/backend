@@ -17,15 +17,15 @@ public class ChatRoomRepositoryImpl implements ChatRoomRepository {
     private final ChatRoomJpaRepository chatRoomJpaRepository;
 
     @Override
-    public Long save(ChatRoomCommand chatRoomCommand) {
+    public ChatRoom save(ChatRoomCommand chatRoomCommand) {
         ChatRoomEntity chatRoomEntity = ChatRoomEntity.of(chatRoomCommand.getName(), chatRoomCommand.getHostId());
         return chatRoomJpaRepository.save(chatRoomEntity)
-                .getId();
+                .toDomain();
     }
 
     @Override
     public List<ChatRoom> findAllByUserId(Long id) {
-        return chatRoomJpaRepository.findByHostId(id)
+        return chatRoomJpaRepository.findByHostIdOrderByCreatedAtDesc(id)
                 .stream()
                 .map(ChatRoomEntity::toDomain)
                 .toList();

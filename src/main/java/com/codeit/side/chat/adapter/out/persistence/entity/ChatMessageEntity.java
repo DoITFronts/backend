@@ -24,7 +24,7 @@ public class ChatMessageEntity {
 
     private Long chatRoomId;
 
-    private LocalDateTime date;
+    private LocalDateTime createdAt;
 
     private Long userId;
 
@@ -38,7 +38,7 @@ public class ChatMessageEntity {
         return new ChatMessageEntity(
                 chatMessage.getId(),
                 chatMessage.getRoomId(),
-                chatMessage.getDate(),
+                chatMessage.getCreatedAt(),
                 chatMessage.getUserId(),
                 chatMessage.getUserNickname(),
                 chatMessage.getType(),
@@ -47,6 +47,6 @@ public class ChatMessageEntity {
     }
 
     public ChatMessage toDomain() {
-        return ChatMessage.of(chatRoomId, date, userId, userNickname, type, content);
+        return ChatMessage.of(id, chatRoomId, createdAt, userId, userNickname, type, content);
     }
 }

@@ -27,4 +27,9 @@ public class FakeUserQueryRepository implements UserQueryRepository {
     public UserEntity getByEmail(String email) {
         return null;
     }
+
+    @Override
+    public List<User> findByIds(List<Long> ids) {
+        return List.of();
+    }
 }

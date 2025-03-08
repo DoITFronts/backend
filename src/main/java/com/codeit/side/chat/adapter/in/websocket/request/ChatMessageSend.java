@@ -24,7 +24,7 @@ public class ChatMessageSend {
         return new ChatMessageSend(
                 chatMessage.getId(),
                 chatMessage.getRoomId(),
-                chatMessage.getDate(),
+                chatMessage.getCreatedAt(),
                 chatMessage.getUserId(),
                 chatMessage.getUserNickname(),
                 chatMessage.getType(),
