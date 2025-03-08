@@ -7,10 +7,7 @@ import com.codeit.side.lightening.adapter.in.web.response.CreateLighteningRespon
 import com.codeit.side.lightening.adapter.in.web.response.LighteningResponse;
 import com.codeit.side.lightening.adapter.in.web.response.LighteningResponses;
 import com.codeit.side.lightening.application.port.in.LighteningUseCase;
-import com.codeit.side.lightening.domain.Lightening;
-import com.codeit.side.lightening.domain.LighteningCondition;
-import com.codeit.side.lightening.domain.LighteningInfo;
-import com.codeit.side.lightening.domain.LighteningPaging;
+import com.codeit.side.lightening.domain.*;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -81,10 +78,11 @@ public class LighteningController {
             @RequestParam(required = false) String town,
             @RequestParam(required = false) LocalDateTime targetAt,
             @RequestParam(required = false, defaultValue = "1") Integer page,
-            @RequestParam(required = false, defaultValue = "10") Integer size
+            @RequestParam(required = false, defaultValue = "10") Integer size,
+            @RequestParam(required = false, defaultValue = "CREATED_DESC") String order
     ) {
         String email = getEmail(false);
-        LighteningCondition lighteningCondition = LighteningCondition.of(category, city, town, targetAt, LighteningPaging.of(page, size));
+        LighteningCondition lighteningCondition = LighteningCondition.of(ConditionType.LIST, category, city, town, targetAt, LighteningPaging.of(page, size), order, null);
         List<LighteningInfo> lighteningInfos = lighteningUseCase.findAllBy(email, lighteningCondition);
         return ResponseEntity.ok(LighteningResponses.from(email, lighteningInfos));
     }

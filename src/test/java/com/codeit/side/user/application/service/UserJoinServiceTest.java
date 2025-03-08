@@ -24,11 +24,11 @@ class UserJoinServiceTest {
     @DisplayName("유저 생성 서비스는 유저를 생성해서 응답한다.")
     void createUserReturnsUser() {
         //given
-        UserJoinService userJoinService = new UserJoinService(new FakeUserQueryRepository(), new FakeUserCommandRepository(), new FakeCustomPasswordEncoder());
+        UserService userJoinService = new UserService(new FakeUserQueryRepository(), new FakeUserCommandRepository(), new FakeCustomPasswordEncoder());
         UserCommand user = UserCommandFixture.create("bht9011@gmail.com", "password~", "박병훈", "byung123", LocalDate.now());
         //when
         //then
-        User actual = userJoinService.createUser(user);
+        User actual = userJoinService.create(user);
         assertThat(actual.getEmail()).isEqualTo(user.email());
         assertThat(actual.getName()).isEqualTo(user.name());
         assertThat(actual.getNickname()).isEqualTo(user.nickname());
@@ -43,12 +43,12 @@ class UserJoinServiceTest {
         List<User> users = new ArrayList<>();
         FakeUserQueryRepository userQueryRepository = new FakeUserQueryRepository(users);
         FakeUserCommandRepository userCommandRepository = new FakeUserCommandRepository(users);
-        UserJoinService userJoinService = new UserJoinService(userQueryRepository, userCommandRepository ,new FakeCustomPasswordEncoder());
+        UserService userJoinService = new UserService(userQueryRepository, userCommandRepository ,new FakeCustomPasswordEncoder());
         UserCommand user = UserCommandFixture.create(email, "password~", "박병훈", "byung123", LocalDate.now());
-        userJoinService.createUser(user);
+        userJoinService.create(user);
         //when
         //then
-        assertThatThrownBy(() -> userJoinService.createUser(UserCommandFixture.create(email)))
+        assertThatThrownBy(() -> userJoinService.create(UserCommandFixture.create(email)))
                 .isInstanceOf(EmailAlreadyExistsException.class);
     }
 
@@ -61,10 +61,10 @@ class UserJoinServiceTest {
         FakeUserQueryRepository userQueryRepository = new FakeUserQueryRepository(users);
         FakeUserCommandRepository userCommandRepository = new FakeUserCommandRepository(users);
         FakeCustomPasswordEncoder encoder = new FakeCustomPasswordEncoder();
-        UserJoinService userJoinService = new UserJoinService(userQueryRepository, userCommandRepository, encoder);
+        UserService userJoinService = new UserService(userQueryRepository, userCommandRepository, encoder);
         UserCommand user = UserCommandFixture.create(email, "password~", "박병훈", "byung123", LocalDate.of(1999, 9, 11));
         //when
-        User actual = userJoinService.createUser(user);
+        User actual = userJoinService.create(user);
         //then
         assertThat(userQueryRepository.existsByEmail(user.email())).isTrue();
         assertThat(actual.getEmail()).isEqualTo(user.email());

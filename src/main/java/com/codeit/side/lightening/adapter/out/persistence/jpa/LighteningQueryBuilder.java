@@ -51,4 +51,11 @@ public class LighteningQueryBuilder {
         }
         return this;
     }
+
+    public LighteningQueryBuilder addMyCreatedCondition(String createdBy) {
+        if (createdBy != null) {
+            booleanBuilder.and(lighteningEntity.host.eq(createdBy));
+        }
+        return this;
+    }
 }
