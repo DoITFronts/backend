@@ -5,7 +5,7 @@ import com.codeit.side.chat.adapter.out.persistence.jpa.ChatRoomJpaRepository;
 import com.codeit.side.chat.application.port.out.ChatRoomRepository;
 import com.codeit.side.chat.domain.ChatRoom;
 import com.codeit.side.chat.domain.command.ChatRoomCommand;
-import com.codeit.side.common.adapter.exception.UserNotFoundException;
+import com.codeit.side.common.adapter.exception.ChatRoomNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
@@ -34,7 +34,7 @@ public class ChatRoomRepositoryImpl implements ChatRoomRepository {
     @Override
     public ChatRoom getBy(Long id) {
         return chatRoomJpaRepository.findById(id)
-                .orElseThrow(UserNotFoundException::new)
+                .orElseThrow(ChatRoomNotFoundException::new)
                 .toDomain();
     }
 }
