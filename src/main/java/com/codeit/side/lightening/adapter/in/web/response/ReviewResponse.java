@@ -12,6 +12,7 @@ public record ReviewResponse(
         String content,
         Long userId,
         String nickname,
+        String userImageUrl,
         LocalDateTime createdAt
 ) {
     public static ReviewResponse from(UserReview userReview) {
@@ -23,6 +24,7 @@ public record ReviewResponse(
                 review.getContent(),
                 user.getId(),
                 user.getNickname(),
+                user.isHasImage() ? "https://codeit-doit.s3.ap-northeast-2.amazonaws.com/user/%s/image.jpg".formatted(user.getId()) : "",
                 review.getCreatedAt()
         );
     }
