@@ -7,6 +7,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
@@ -90,6 +91,16 @@ public class ExceptionController {
     @ExceptionHandler(ChatRoomNotFoundException.class)
     public ResponseEntity<ExceptionResponse> chatRoomNotFoundExceptionHandler(HttpServletRequest request, ChatRoomNotFoundException e) {
         ErrorCode errorCode = e.getErrorCode();
+
+        log.error("Request URL: {}, Error Message: {}", request.getRequestURL(), e.getMessage());
+
+        return ResponseEntity.status(errorCode.getStatusCode())
+                .body(new ExceptionResponse(errorCode.getCode(), e.getMessage()));
+    }
+
+    @ExceptionHandler(MissingServletRequestParameterException.class)
+    public ResponseEntity<ExceptionResponse> missingServletRequestParameterExceptionHandler(HttpServletRequest request, MissingServletRequestParameterException e) {
+        ErrorCode errorCode = ErrorCode.INVALID_INPUT_VALUE;
 
         log.error("Request URL: {}, Error Message: {}", request.getRequestURL(), e.getMessage());
 

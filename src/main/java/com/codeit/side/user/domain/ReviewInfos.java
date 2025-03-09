@@ -11,11 +11,10 @@ import java.util.stream.Stream;
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 public class ReviewInfos {
     private final List<ReviewInfo> reviewInfos;
-    private final User user;
     private final Integer totalCount;
 
-    public static ReviewInfos of(List<ReviewInfo> reviewInfos, User user, Integer totalCount) {
-        return new ReviewInfos(reviewInfos, user, totalCount);
+    public static ReviewInfos of(List<ReviewInfo> reviewInfos, Integer totalCount) {
+        return new ReviewInfos(reviewInfos, totalCount);
     }
 
     public Stream<ReviewInfo> stream() {

@@ -15,6 +15,7 @@ import com.codeit.side.user.domain.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
@@ -60,15 +61,43 @@ public class ReviewService implements ReviewUseCase {
         return createReviewInfos(reviews, idToLightening, user, totalCount);
     }
 
-    private ReviewInfos createReviewInfos(List<Review> reviews, Map<Long, Lightening> idToLightening, User user, int totalCount) {
-        List<ReviewInfo> reviewInfos = reviews.stream()
-                .map(review -> createReviewInfo(review, idToLightening.get(review.getLighteningId())))
+    @Override
+    public ReviewInfos findAllBy(String category, String city, String town, LocalDateTime targetAt, String order, Integer size, Integer page) {
+        List<Review> reviews = reviewRepository.findAllBy(category, city, town, targetAt, order, size, page);
+        int totalCount = reviewRepository.countAllBy(category, city, town, targetAt, order);
+
+        List<Long> lighteningIds = reviews.stream()
+                .map(Review::getLighteningId)
                 .toList();
-        return ReviewInfos.of(reviewInfos, user, totalCount);
+        Map<Long, Lightening> idToLightening = lighteningReadRepository.findAllBy(lighteningIds)
+                .stream()
+                .collect(Collectors.toMap(Lightening::getId, Function.identity()));
+
+        List<Long> userIds = reviews.stream()
+                .map(Review::getUserId)
+                .toList();
+        Map<Long, User> idToUser = userQueryRepository.findAllByIds(userIds)
+                .stream()
+                .collect(Collectors.toMap(User::getId, Function.identity()));
+        return createReviewInfos(reviews, idToLightening, idToUser, totalCount);
     }
 
-    private ReviewInfo createReviewInfo(Review review, Lightening lightening) {
-        return ReviewInfo.of(review, lightening);
+    private ReviewInfos createReviewInfos(List<Review> reviews, Map<Long, Lightening> idToLightening, Map<Long, User> idToUser, int totalCount) {
+        List<ReviewInfo> reviewInfos = reviews.stream()
+                .map(review -> createReviewInfo(review, idToLightening.get(review.getLighteningId()), idToUser.get(review.getUserId())))
+                .toList();
+        return ReviewInfos.of(reviewInfos, totalCount);
+    }
+
+    private ReviewInfos createReviewInfos(List<Review> reviews, Map<Long, Lightening> idToLightening, User user, int totalCount) {
+        List<ReviewInfo> reviewInfos = reviews.stream()
+                .map(review -> createReviewInfo(review, idToLightening.get(review.getLighteningId()), user))
+                .toList();
+        return ReviewInfos.of(reviewInfos, totalCount);
+    }
+
+    private ReviewInfo createReviewInfo(Review review, Lightening lightening, User user) {
+        return ReviewInfo.of(review, lightening, user);
     }
 
     private List<UserReview> createUserReviews(List<Review> reviews) {

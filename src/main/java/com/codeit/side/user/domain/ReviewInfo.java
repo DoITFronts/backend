@@ -11,8 +11,9 @@ import lombok.RequiredArgsConstructor;
 public class ReviewInfo {
     private final Review review;
     private final Lightening lightening;
+    private final User user;
 
-    public static ReviewInfo of(Review review, Lightening lightening) {
-        return new ReviewInfo(review, lightening);
+    public static ReviewInfo of(Review review, Lightening lightening, User user) {
+        return new ReviewInfo(review, lightening, user);
     }
 }

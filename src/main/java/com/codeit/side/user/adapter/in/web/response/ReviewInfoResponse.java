@@ -21,8 +21,9 @@ public record ReviewInfoResponse(
         String userImageUrl
 ) {
 
-    public static ReviewInfoResponse of(ReviewInfo reviewInfo, User user) {
+    public static ReviewInfoResponse from(ReviewInfo reviewInfo) {
         Review review = reviewInfo.getReview();
+        User user = reviewInfo.getUser();
         Lightening lightening = reviewInfo.getLightening();
         return new ReviewInfoResponse(
                 review.getId(),

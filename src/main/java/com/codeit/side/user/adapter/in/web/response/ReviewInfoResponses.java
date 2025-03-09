@@ -7,7 +7,7 @@ import java.util.List;
 public record ReviewInfoResponses(List<ReviewInfoResponse> reviews, Integer totalCount) {
     public static ReviewInfoResponses from(ReviewInfos reviewInfos) {
         List<ReviewInfoResponse> reviewInfoResponses = reviewInfos.stream()
-                .map(reviewInfo -> ReviewInfoResponse.of(reviewInfo, reviewInfos.getUser()))
+                .map(ReviewInfoResponse::from)
                 .toList();
         return new ReviewInfoResponses(reviewInfoResponses, reviewInfos.getTotalCount());
     }

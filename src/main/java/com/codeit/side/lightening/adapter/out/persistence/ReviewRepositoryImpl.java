@@ -10,6 +10,7 @@ import com.codeit.side.lightening.domain.command.ReviewCommand;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Repository
@@ -52,5 +53,18 @@ public class ReviewRepositoryImpl implements ReviewRepository {
     @Override
     public int countAllBy(Long userId, String category) {
         return reviewJpaQueryRepository.countAllBy(userId, category);
+    }
+
+    @Override
+    public List<Review> findAllBy(String category, String city, String town, LocalDateTime targetAt, String order, Integer size, Integer page) {
+        return reviewJpaQueryRepository.findAllBy(category, city, town, targetAt, order, size, page)
+                .stream()
+                .map(ReviewDto::toDomain)
+                .toList();
+    }
+
+    @Override
+    public int countAllBy(String category, String city, String town, LocalDateTime targetAt, String order) {
+        return reviewJpaQueryRepository.countAllBy(category, city, town, targetAt, order);
     }
 }

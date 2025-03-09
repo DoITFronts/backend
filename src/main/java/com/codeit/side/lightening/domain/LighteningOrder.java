@@ -15,6 +15,9 @@ public enum LighteningOrder {
 
     //마이페이지 내가 만든 번개 목록
     TARGET_DATE_DESC,
+
+    //모든 리뷰
+    RATING_DESC,
     ;
 
     private static final Map<String, LighteningOrder> NAME_TO_LIGHTENING_ORDER = Arrays.stream(values())
