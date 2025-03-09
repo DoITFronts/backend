@@ -61,6 +61,20 @@ public class UserController {
         return ResponseEntity.ok(ReviewInfoResponses.from(reviewInfos));
     }
 
+    @GetMapping("/lightenings/joined")
+    public ResponseEntity<LighteningResponses> getJoinedLightenings(@RequestParam String category, @RequestParam(defaultValue = "10") Integer size, @RequestParam(defaultValue = "1") Integer page) {
+        String email = getEmail();
+        LighteningCondition lighteningCondition = LighteningCondition.of(
+                category,
+                ConditionType.MY_JOINED,
+                LighteningPaging.of(page, size),
+                LighteningOrder.CREATED_DESC.name(),
+                email
+        );
+        List<LighteningInfo> lighteningInfos = lighteningUseCase.findAllBy(email, lighteningCondition);
+        return ResponseEntity.ok(LighteningResponses.from(email, lighteningInfos));
+    }
+
     private String getEmail() {
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
         if ("anonymousUser".equals(email)) {

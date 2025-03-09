@@ -55,6 +55,7 @@ public class LighteningQueryEntityRepository {
             case LIST -> listConditionBuilder(lighteningCondition);
             case MY_CREATED -> myCreatedConditionBuilder(lighteningCondition);
             case LIKE -> likeConditionBuilder(lighteningCondition, email);
+            case MY_JOINED -> myJoinedConditionBuilder(lighteningCondition, email);
         };
     }
 
@@ -84,6 +85,14 @@ public class LighteningQueryEntityRepository {
                 .addTownCondition(lighteningCondition.getTown())
                 .addTargetAtCondition(lighteningCondition.getTargetAt())
                 .addLikeCondition(email)
+                .build();
+    }
+
+    private BooleanBuilder myJoinedConditionBuilder(LighteningCondition lighteningCondition, String email) {
+        return LighteningQueryBuilder.Builder()
+                .addIsInactiveCondition(false)
+                .addCategoryCondition(lighteningCondition.getCategory())
+                .addMyJoinedCondition(email)
                 .build();
     }
 

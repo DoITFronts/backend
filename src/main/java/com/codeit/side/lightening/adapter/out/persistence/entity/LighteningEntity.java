@@ -90,6 +90,7 @@ public class LighteningEntity extends BaseEntity {
                 .placeName(lightening.getPlaceName())
                 .latitude(lightening.getLatitude())
                 .longitude(lightening.getLongitude())
+                .isInactive(false)
                 .build();
     }
 
@@ -112,6 +113,7 @@ public class LighteningEntity extends BaseEntity {
                 .placeName(placeName)
                 .latitude(latitude)
                 .longitude(longitude)
+                .isInactive(false)
                 .build();
     }
 

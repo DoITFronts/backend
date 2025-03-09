@@ -11,6 +11,7 @@ import java.time.LocalDateTime;
 
 import static com.codeit.side.lightening.adapter.out.persistence.entity.QLighteningEntity.lighteningEntity;
 import static com.codeit.side.lightening.adapter.out.persistence.entity.QLighteningLikeEntity.lighteningLikeEntity;
+import static com.codeit.side.lightening.adapter.out.persistence.entity.QLighteningMemberEntity.lighteningMemberEntity;
 
 @Getter
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
@@ -72,6 +73,17 @@ public class LighteningQueryBuilder {
                     JPAExpressions.select(lighteningLikeEntity.lighteningId)
                             .from(lighteningLikeEntity)
                             .where(lighteningLikeEntity.email.eq(email), lighteningLikeEntity.isDeleted.eq(false))
+            ));
+        }
+        return this;
+    }
+
+    public LighteningQueryBuilder addMyJoinedCondition(String email) {
+        if (email != null) {
+            booleanBuilder.and(lighteningEntity.id.in(
+                    JPAExpressions.select(lighteningMemberEntity.lighteningId)
+                            .from(lighteningMemberEntity)
+                            .where(lighteningMemberEntity.email.eq(email), lighteningMemberEntity.isDeleted.eq(false))
             ));
         }
         return this;
