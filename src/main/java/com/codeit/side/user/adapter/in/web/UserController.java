@@ -34,9 +34,9 @@ public class UserController {
     }
 
     @PostMapping("/user")
-    public ResponseEntity<UserResponse> updateUser(@RequestPart(required = false) MultipartFile image, @RequestPart String description) {
+    public ResponseEntity<UserResponse> updateUser(@RequestPart(required = false) MultipartFile image, @RequestPart(required = false) String description, @RequestPart(required = false) String nickname) {
         String email = getEmail();
-        User updatedUser = userUseCase.updateUser(image, email, description);
+        User updatedUser = userUseCase.updateUser(image, email, description, nickname);
         return ResponseEntity.ok(UserResponse.from(updatedUser));
     }
 

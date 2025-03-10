@@ -9,5 +9,5 @@ public interface UserUseCase {
 
     User getUser(String email);
 
-    User updateUser(MultipartFile image, String email, String description);
+    User updateUser(MultipartFile image, String email, String description, String nickname);
 }

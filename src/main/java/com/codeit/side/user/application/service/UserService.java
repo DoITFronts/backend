@@ -42,9 +42,9 @@ public class UserService implements UserUseCase {
 
     @Override
     @Transactional
-    public User updateUser(MultipartFile image, String email, String description) {
+    public User updateUser(MultipartFile image, String email, String description, String nickname) {
         fileUploader.validateImage(image);
-        User user = userCommandRepository.updateUser(email, description, image != null);
+        User user = userCommandRepository.updateUser(email, description, nickname, image != null);
         fileUploader.uploadImageToS3(image, "user/" + user.getId(), "image.jpg", "jpg");
         return user;
     }

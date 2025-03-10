@@ -23,7 +23,7 @@ public class FakeUserCommandRepository implements UserCommandRepository {
     }
 
     @Override
-    public User updateUser(String email, String description, boolean hasImage) {
+    public User updateUser(String email, String description, String nickname, boolean hasImage) {
         return null;
     }
 }
