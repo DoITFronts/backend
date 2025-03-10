@@ -35,7 +35,7 @@ public class LighteningService implements LighteningUseCase {
         fileUploader.validateImage(image);
         Lightening savedLightening = lighteningCommandRepository.save(email, lightening);
         lighteningCommandRepository.join(email, savedLightening.getId());
-        chatMessageUseCase.createChatRoom(email, savedLightening.getTitle());
+        chatMessageUseCase.createChatRoom(email, savedLightening.getId(), savedLightening.getTitle());
         fileUploader.uploadImageToS3(image, "lightening/" + savedLightening.getId(), "image.jpg", "jpg");
         return savedLightening;
     }

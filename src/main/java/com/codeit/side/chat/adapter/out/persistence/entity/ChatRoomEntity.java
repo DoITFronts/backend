@@ -18,11 +18,14 @@ public class ChatRoomEntity extends BaseEntity {
 
     private String name;
 
+    private Long lighteningId;
+
     private Long hostId;
 
-    public static ChatRoomEntity of(String name, Long hostId) {
+    public static ChatRoomEntity of(String name, Long lighteningId, Long hostId) {
         return ChatRoomEntity.builder()
                 .name(name)
+                .lighteningId(lighteningId)
                 .hostId(hostId)
                 .build();
     }

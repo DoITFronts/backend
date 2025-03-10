@@ -8,9 +8,10 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 public class ChatRoomCommand {
     private final String name;
+    private final Long lighteningId;
     private final Long hostId;
 
-    public static ChatRoomCommand of(String name, Long hostId) {
-        return new ChatRoomCommand(name, hostId);
+    public static ChatRoomCommand of(String name, Long lighteningId, Long hostId) {
+        return new ChatRoomCommand(name, lighteningId, hostId);
     }
 }

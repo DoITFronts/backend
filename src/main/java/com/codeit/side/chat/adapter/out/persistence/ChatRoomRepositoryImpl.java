@@ -18,7 +18,7 @@ public class ChatRoomRepositoryImpl implements ChatRoomRepository {
 
     @Override
     public ChatRoom save(ChatRoomCommand chatRoomCommand) {
-        ChatRoomEntity chatRoomEntity = ChatRoomEntity.of(chatRoomCommand.getName(), chatRoomCommand.getHostId());
+        ChatRoomEntity chatRoomEntity = ChatRoomEntity.of(chatRoomCommand.getName(), chatRoomCommand.getLighteningId(), chatRoomCommand.getHostId());
         return chatRoomJpaRepository.save(chatRoomEntity)
                 .toDomain();
     }

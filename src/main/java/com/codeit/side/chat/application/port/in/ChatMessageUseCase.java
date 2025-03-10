@@ -2,7 +2,6 @@ package com.codeit.side.chat.application.port.in;
 
 import com.codeit.side.chat.domain.ChatMessage;
 import com.codeit.side.chat.domain.ChatMessages;
-import com.codeit.side.chat.domain.ChatRoom;
 import com.codeit.side.chat.domain.ChatRoomInfo;
 
 import java.util.List;
@@ -10,7 +9,7 @@ import java.util.List;
 public interface ChatMessageUseCase {
     void save(ChatMessage chatMessage);
 
-    ChatRoom createChatRoom(String email, String chatRoomName);
+    void createChatRoom(String email, Long lighteningId, String chatRoomName);
 
     List<ChatRoomInfo> findAllChatRooms(String email);
 
