@@ -14,6 +14,16 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @Slf4j
 @RestControllerAdvice
 public class ExceptionController {
+    @ExceptionHandler(RuntimeException.class)
+    public ResponseEntity<ExceptionResponse> runtimeExceptionHandler(HttpServletRequest request, RuntimeException e) {
+        ErrorCode errorCode = ErrorCode.INTERNAL_SERVER_ERROR;
+
+        log.error("Request URL: {}, Error Message: {}", request.getRequestURL(), e.getMessage());
+
+        return ResponseEntity.status(500)
+                .body(new ExceptionResponse(errorCode.getCode(), errorCode.getMessage()));
+    }
+
     @ExceptionHandler(BusinessException.class)
     public ResponseEntity<ExceptionResponse> businessExceptionHandler(HttpServletRequest request, BusinessException e) {
         ErrorCode errorCode = e.getErrorCode();
