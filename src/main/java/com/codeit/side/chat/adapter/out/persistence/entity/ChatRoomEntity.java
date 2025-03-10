@@ -18,6 +18,7 @@ public class ChatRoomEntity extends BaseEntity {
 
     private String name;
 
+    @Column(unique = true)
     private Long lighteningId;
 
     private Long hostId;

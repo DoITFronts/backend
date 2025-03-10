@@ -39,4 +39,19 @@ public class ChatRoomRepositoryImpl implements ChatRoomRepository {
                 .orElseThrow(ChatRoomNotFoundException::new)
                 .toDomain();
     }
+
+    @Override
+    public ChatRoom getByLighteningId(Long lighteningId) {
+        return chatRoomJpaRepository.findByLighteningId(lighteningId)
+                .orElseThrow(ChatRoomNotFoundException::new)
+                .toDomain();
+    }
+
+    @Override
+    public List<ChatRoom> findAllByLighteningIds(List<Long> lighteningIds) {
+        return chatRoomJpaRepository.findAllByLighteningIdIn(lighteningIds)
+                .stream()
+                .map(ChatRoomEntity::toDomain)
+                .toList();
+    }
 }

@@ -39,7 +39,7 @@ public class ReviewController {
 
     @GetMapping("/reviews/all")
     public ResponseEntity<ReviewInfoResponses> getReviews(
-            @RequestParam String category,
+            @RequestParam(required = false) String category,
             @RequestParam(required = false) String city,
             @RequestParam(required = false) String town,
             @RequestParam(required = false)LocalDateTime targetAt,

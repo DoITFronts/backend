@@ -11,4 +11,8 @@ public interface ChatRoomRepository {
     List<ChatRoom> findAllByUserId(Long id);
 
     ChatRoom getBy(Long id);
+
+    ChatRoom getByLighteningId(Long lighteningId);
+
+    List<ChatRoom> findAllByLighteningIds(List<Long> lighteningIds);
 }

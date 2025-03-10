@@ -1,6 +1,7 @@
 package com.codeit.side.lightening.application.service;
 
 import com.codeit.side.chat.application.port.in.ChatMessageUseCase;
+import com.codeit.side.chat.domain.ChatRoom;
 import com.codeit.side.common.adapter.exception.IllegalRequestException;
 import com.codeit.side.common.adapter.exception.LighteningAlreadyFullException;
 import com.codeit.side.common.adapter.exception.UserAlreadyJoinedException;
@@ -70,7 +71,8 @@ public class LighteningService implements LighteningUseCase {
         Lightening lightening = lighteningReadRepository.getById(id);
         List<LighteningMember> lighteningMember = lighteningReadRepository.findAllMembersBy(lightening.getId());
         boolean isLighteningLike = lighteningReadRepository.findLighteningLikeBy(email, lightening.getId());
-        return createLighteningInfo(lightening, lighteningMember, isLighteningLike);
+        ChatRoom chatRoom = chatMessageUseCase.getChatRoomByLighteningId(lightening.getId());
+        return createLighteningInfo(lightening, lighteningMember, chatRoom, isLighteningLike);
     }
 
     @Override
@@ -81,7 +83,8 @@ public class LighteningService implements LighteningUseCase {
                 .toList();
         List<LighteningMember> lighteningMembers = lighteningReadRepository.findAllMembersBy(lighteningIds);
         List<LighteningLike> lighteningLikes = lighteningReadRepository.findLighteningLikesBy(email, lighteningIds);
-        return createLighteningInfos(lightenings, lighteningMembers, lighteningLikes);
+        List<ChatRoom> chatRoomIds = chatMessageUseCase.findAllChatRoomsByLighteningIds(lighteningIds);
+        return createLighteningInfos(lightenings, lighteningMembers, chatRoomIds, lighteningLikes);
     }
 
     @Override
@@ -104,19 +107,21 @@ public class LighteningService implements LighteningUseCase {
         lighteningCommandRepository.delete(id);
     }
 
-    private List<LighteningInfo> createLighteningInfos(List<Lightening> lightenings, List<LighteningMember> lighteningMembers, List<LighteningLike> lighteningLikes) {
+    private List<LighteningInfo> createLighteningInfos(List<Lightening> lightenings, List<LighteningMember> lighteningMembers, List<ChatRoom> chatRooms, List<LighteningLike> lighteningLikes) {
         Map<Long, List<LighteningMember>> idToLighteningMembers = lighteningMembers.stream()
                 .collect(Collectors.groupingBy(LighteningMember::getLighteningId));
-        Map<Long, LighteningLike> idToLighteningLikes = lighteningLikes.stream()
+        Map<Long, LighteningLike> idToLighteningLike = lighteningLikes.stream()
                 .collect(Collectors.toMap(LighteningLike::getLighteningId, Function.identity()));
+        Map<Long, ChatRoom> idToChatRoom = chatRooms.stream()
+                .collect(Collectors.toMap(ChatRoom::getLighteningId, Function.identity()));
 
         return lightenings.stream()
-                .map(lightening -> createLighteningInfo(lightening, idToLighteningMembers.getOrDefault(lightening.getId(), List.of()), idToLighteningLikes.containsKey(lightening.getId())))
+                .map(lightening -> createLighteningInfo(lightening, idToLighteningMembers.getOrDefault(lightening.getId(), List.of()), idToChatRoom.get(lightening.getId()), idToLighteningLike.containsKey(lightening.getId())))
                 .toList();
     }
 
-    private LighteningInfo createLighteningInfo(Lightening lightening, List<LighteningMember> lighteningMember, boolean isLighteningLike) {
-        return LighteningInfo.of(lightening, lighteningMember, isLighteningLike);
+    private LighteningInfo createLighteningInfo(Lightening lightening, List<LighteningMember> lighteningMember, ChatRoom chatRoom, boolean isLighteningLike) {
+        return LighteningInfo.of(lightening, lighteningMember, chatRoom, isLighteningLike);
     }
 
     private void validateLightening(String email, Lightening lightening) {

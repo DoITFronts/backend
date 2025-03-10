@@ -92,6 +92,16 @@ public class ChatMessageService implements ChatMessageUseCase {
         chatMemberRepository.join(id, user.getId());
     }
 
+    @Override
+    public ChatRoom getChatRoomByLighteningId(Long lighteningId) {
+        return chatRoomRepository.getByLighteningId(lighteningId);
+    }
+
+    @Override
+    public List<ChatRoom> findAllChatRoomsByLighteningIds(List<Long> lighteningIds) {
+        return chatRoomRepository.findAllByLighteningIds(lighteningIds);
+    }
+
     private List<ChatRoomInfo> createChatRoomInfos(List<ChatRoom> chatRooms, Map<Long, ChatMessage> allLastMessageByIds, Map<Long, Integer> idToMemberSize) {
         return chatRooms.stream()
                 .map(chatRoom -> createChatRoomInfo(chatRoom, allLastMessageByIds.get(chatRoom.getId()), idToMemberSize.get(chatRoom.getId())))
