@@ -1,5 +1,6 @@
 package com.codeit.side.lightening.application.service;
 
+import com.codeit.side.chat.application.port.in.ChatMessageUseCase;
 import com.codeit.side.common.adapter.exception.IllegalRequestException;
 import com.codeit.side.common.adapter.exception.LighteningAlreadyFullException;
 import com.codeit.side.common.adapter.exception.UserAlreadyJoinedException;
@@ -26,6 +27,7 @@ public class LighteningService implements LighteningUseCase {
     private final LighteningCommandRepository lighteningCommandRepository;
     private final LighteningReadRepository lighteningReadRepository;
     private final FileUploadOutputPort fileUploader;
+    private final ChatMessageUseCase chatMessageUseCase;
 
     @Override
     @Transactional
@@ -33,6 +35,7 @@ public class LighteningService implements LighteningUseCase {
         fileUploader.validateImage(image);
         Lightening savedLightening = lighteningCommandRepository.save(email, lightening);
         lighteningCommandRepository.join(email, savedLightening.getId());
+        chatMessageUseCase.createChatRoom(email, savedLightening.getTitle());
         fileUploader.uploadImageToS3(image, "lightening/" + savedLightening.getId(), "image.jpg", "jpg");
         return savedLightening;
     }

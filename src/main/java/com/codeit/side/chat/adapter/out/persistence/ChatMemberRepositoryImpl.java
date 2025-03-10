@@ -10,7 +10,6 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @Repository
 @RequiredArgsConstructor
@@ -19,14 +18,8 @@ public class ChatMemberRepositoryImpl implements ChatMemberRepository {
 
     @Override
     public void save(Long id, ChatRoomCommand chatRoomCommand) {
-        List<ChatMemberEntity> chatMemberEntities = chatRoomCommand.getUserIds()
-                .stream()
-                .map(userId -> chatMemberJpaRepository.save(ChatMemberEntity.of(id, userId)))
-                .toList();
         ChatMemberEntity chatMemberEntity = ChatMemberEntity.of(id, chatRoomCommand.getHostId());
-        List<ChatMemberEntity> list = Stream.concat(chatMemberEntities.stream(), Stream.of(chatMemberEntity))
-                .toList();
-        chatMemberJpaRepository.saveAll(list);
+        chatMemberJpaRepository.save(chatMemberEntity);
     }
 
     @Override

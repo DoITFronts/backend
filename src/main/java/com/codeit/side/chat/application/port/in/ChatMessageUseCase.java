@@ -4,14 +4,13 @@ import com.codeit.side.chat.domain.ChatMessage;
 import com.codeit.side.chat.domain.ChatMessages;
 import com.codeit.side.chat.domain.ChatRoom;
 import com.codeit.side.chat.domain.ChatRoomInfo;
-import com.codeit.side.chat.domain.command.ChatRoomCommand;
 
 import java.util.List;
 
 public interface ChatMessageUseCase {
     void save(ChatMessage chatMessage);
 
-    ChatRoom createChatRoom(String email, ChatRoomCommand chatRoomCommand);
+    ChatRoom createChatRoom(String email, String chatRoomName);
 
     List<ChatRoomInfo> findAllChatRooms(String email);
 

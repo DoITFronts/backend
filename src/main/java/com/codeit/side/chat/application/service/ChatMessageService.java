@@ -38,14 +38,10 @@ public class ChatMessageService implements ChatMessageUseCase {
 
     @Override
     @Transactional
-    public ChatRoom createChatRoom(String email, ChatRoomCommand chatRoomCommand) {
+    public ChatRoom createChatRoom(String email, String chatRoomName) {
         User host = userQueryRepository.getByEmail(email)
                 .toDomain();
-        List<User> users = userQueryRepository.getAllByIds(chatRoomCommand.getUserIds());
-        List<Long> userIds = users.stream()
-                .map(User::getId)
-                .toList();
-        ChatRoomCommand userChatRoomCommand = ChatRoomCommand.of(chatRoomCommand.getName(), host.getId(), userIds);
+        ChatRoomCommand userChatRoomCommand = ChatRoomCommand.of(chatRoomName, host.getId());
         ChatRoom chatRoom = chatRoomRepository.save(userChatRoomCommand);
         chatMemberRepository.save(chatRoom.getId(), userChatRoomCommand);
         return chatRoom;
