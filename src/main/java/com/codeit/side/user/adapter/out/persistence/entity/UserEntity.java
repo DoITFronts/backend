@@ -48,6 +48,7 @@ public class UserEntity {
                 .nickname(user.getNickname())
                 .name(user.getName())
                 .birth(user.getBirth())
+                .hasImage(user.isHasImage())
                 .build();
     }
 
@@ -55,8 +56,13 @@ public class UserEntity {
         return User.of(id, email, password, name, nickname, birth, description, hasImage);
     }
 
-    public UserEntity update(String description, boolean hasImage) {
-        this.description = description;
+    public UserEntity update(String description, String nickname, boolean hasImage) {
+        if (description != null) {
+            this.description = description;
+        }
+        if (nickname != null) {
+            this.nickname = nickname;
+        }
         if (hasImage) {
             this.hasImage = true;
         }

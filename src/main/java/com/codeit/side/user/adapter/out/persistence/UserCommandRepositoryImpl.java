@@ -20,10 +20,10 @@ public class UserCommandRepositoryImpl implements UserCommandRepository {
     }
 
     @Override
-    public User updateUser(String email, String description, boolean hasImage) {
+    public User updateUser(String email, String description, String nickname, boolean hasImage) {
         return userJpaRepository.findByEmail(email)
                 .orElseThrow(UserNotFoundException::new)
-                .update(description, hasImage)
+                .update(description, nickname, hasImage)
                 .toDomain();
     }
 
