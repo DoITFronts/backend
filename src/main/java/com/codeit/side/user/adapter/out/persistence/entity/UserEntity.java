@@ -48,6 +48,7 @@ public class UserEntity {
                 .nickname(user.getNickname())
                 .name(user.getName())
                 .birth(user.getBirth())
+                .hasImage(user.isHasImage())
                 .build();
     }
 
