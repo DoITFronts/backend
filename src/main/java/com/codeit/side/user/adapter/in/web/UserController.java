@@ -25,7 +25,7 @@ public class UserController {
     private final UserUseCase userUseCase;
     private final LighteningUseCase lighteningUseCase;
     private final ReviewUseCase reviewUseCase;
-    
+
     @GetMapping("/user")
     public ResponseEntity<UserResponse> getUser() {
         String email = getEmail();
@@ -41,7 +41,7 @@ public class UserController {
     }
 
     @GetMapping("/lightenings/created")
-    public ResponseEntity<LighteningResponses> getCreatedLightenings(@RequestParam String category, @RequestParam(defaultValue = "10") Integer size, @RequestParam(defaultValue = "1") Integer page) {
+    public ResponseEntity<LighteningResponses> getCreatedLightenings(String category, @RequestParam(defaultValue = "10") Integer size, @RequestParam(defaultValue = "1") Integer page) {
         String email = getEmail();
         LighteningCondition lighteningCondition = LighteningCondition.of(
                 category,
@@ -62,7 +62,7 @@ public class UserController {
     }
 
     @GetMapping("/lightenings/joined")
-    public ResponseEntity<LighteningResponses> getJoinedLightenings(@RequestParam String category, @RequestParam(defaultValue = "10") Integer size, @RequestParam(defaultValue = "1") Integer page) {
+    public ResponseEntity<LighteningResponses> getJoinedLightenings(String category, @RequestParam(defaultValue = "10") Integer size, @RequestParam(defaultValue = "1") Integer page) {
         String email = getEmail();
         LighteningCondition lighteningCondition = LighteningCondition.of(
                 category,
