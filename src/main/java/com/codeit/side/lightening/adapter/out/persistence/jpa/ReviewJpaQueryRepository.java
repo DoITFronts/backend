@@ -50,10 +50,15 @@ public class ReviewJpaQueryRepository {
     }
 
     public List<ReviewEntity> findAllBy(Long userId, String category, Integer size, Integer page) {
+        BooleanBuilder builder = new BooleanBuilder();
+        if (category != null) {
+            builder.and(lighteningEntity.category.eq(Category.from(category)));
+        }
+        builder.and(reviewEntity.userId.eq(userId));
         return jpaQueryFactory.selectFrom(reviewEntity)
                 .innerJoin(lighteningEntity)
-                .on(reviewEntity.lighteningId.eq(lighteningEntity.id), lighteningEntity.category.eq(Category.from(category)), lighteningEntity.isInactive.eq(false))
-                .where(reviewEntity.userId.eq(userId))
+                .on(reviewEntity.lighteningId.eq(lighteningEntity.id), lighteningEntity.isInactive.eq(false))
+                .where(builder)
                 .orderBy(reviewEntity.createdAt.desc())
                 .offset((long) (page - 1) * size)
                 .limit(size)
@@ -61,10 +66,15 @@ public class ReviewJpaQueryRepository {
     }
 
     public int countAllBy(Long userId, String category) {
+        BooleanBuilder builder = new BooleanBuilder();
+        if (category != null) {
+            builder.and(lighteningEntity.category.eq(Category.from(category)));
+        }
+        builder.and(reviewEntity.userId.eq(userId));
         return jpaQueryFactory.selectFrom(reviewEntity)
                 .innerJoin(lighteningEntity)
-                .on(reviewEntity.lighteningId.eq(lighteningEntity.id), lighteningEntity.category.eq(Category.from(category)), lighteningEntity.isInactive.eq(false))
-                .where(reviewEntity.userId.eq(userId))
+                .on(reviewEntity.lighteningId.eq(lighteningEntity.id), lighteningEntity.isInactive.eq(false))
+                .where(builder)
                 .fetch()
                 .size();
     }
