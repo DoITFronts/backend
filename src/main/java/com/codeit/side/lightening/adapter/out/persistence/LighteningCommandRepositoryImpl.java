@@ -29,7 +29,7 @@ public class LighteningCommandRepositoryImpl implements LighteningCommandReposit
 
     @Override
     public void like(String email, Long lighteningId) {
-        lighteningLikeJpaEntityRepository.findByIdAndEmail(lighteningId, email)
+        lighteningLikeJpaEntityRepository.findByLighteningIdAndEmail(lighteningId, email)
                 .ifPresentOrElse(
                         LighteningLikeEntity::update,
                         () -> lighteningLikeJpaEntityRepository.save(LighteningLikeEntity.of(lighteningId, email))
