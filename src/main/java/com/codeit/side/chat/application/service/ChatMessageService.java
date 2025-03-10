@@ -54,9 +54,9 @@ public class ChatMessageService implements ChatMessageUseCase {
         List<Long> chatRoomIds = chatRooms.stream()
                 .map(ChatRoom::getId)
                 .toList();
-        Map<Long, ChatMessage> allLastMessageByIds = chatMessageRepository.findAllLastMessageByIds(chatRoomIds);
+        Map<Long, ChatMessage> idToChatMessage = chatMessageRepository.findAllLastMessageByIds(chatRoomIds);
         Map<Long, Integer> idToMemberSize = chatMemberRepository.findAllMemberCountByIds(chatRoomIds);
-        return createChatRoomInfos(chatRooms, allLastMessageByIds, idToMemberSize);
+        return createChatRoomInfos(chatRooms, idToChatMessage, idToMemberSize);
     }
 
     @Override

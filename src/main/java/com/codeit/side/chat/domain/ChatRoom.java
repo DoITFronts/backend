@@ -11,14 +11,15 @@ import java.util.List;
 public class ChatRoom {
     private final Long id;
     private final String name;
+    private final Long lighteningId;
     private final Long hostId;
     private final List<Long> userIds;
 
-    public static ChatRoom of(Long id, String name, Long hostId) {
-        return of(id, name, hostId, null);
+    public static ChatRoom of(Long id, String name, Long lighteningId, Long hostId) {
+        return of(id, name, lighteningId, hostId, null);
     }
 
-    public static ChatRoom of(Long id, String name, Long hostId, List<Long> userIds) {
-        return new ChatRoom(id, name, hostId, userIds);
+    public static ChatRoom of(Long id, String name, Long lighteningId, Long hostId, List<Long> userIds) {
+        return new ChatRoom(id, name, lighteningId, hostId, userIds);
     }
 }

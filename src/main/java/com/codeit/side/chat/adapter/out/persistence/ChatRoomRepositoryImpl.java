@@ -1,6 +1,7 @@
 package com.codeit.side.chat.adapter.out.persistence;
 
 import com.codeit.side.chat.adapter.out.persistence.entity.ChatRoomEntity;
+import com.codeit.side.chat.adapter.out.persistence.jpa.ChatRoomJpaQueryRepository;
 import com.codeit.side.chat.adapter.out.persistence.jpa.ChatRoomJpaRepository;
 import com.codeit.side.chat.application.port.out.ChatRoomRepository;
 import com.codeit.side.chat.domain.ChatRoom;
@@ -15,6 +16,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ChatRoomRepositoryImpl implements ChatRoomRepository {
     private final ChatRoomJpaRepository chatRoomJpaRepository;
+    private final ChatRoomJpaQueryRepository chatRoomJpaQueryRepository;
 
     @Override
     public ChatRoom save(ChatRoomCommand chatRoomCommand) {
@@ -25,7 +27,7 @@ public class ChatRoomRepositoryImpl implements ChatRoomRepository {
 
     @Override
     public List<ChatRoom> findAllByUserId(Long id) {
-        return chatRoomJpaRepository.findByHostIdOrderByCreatedAtDesc(id)
+        return chatRoomJpaQueryRepository.findAllByUserId(id)
                 .stream()
                 .map(ChatRoomEntity::toDomain)
                 .toList();

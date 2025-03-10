@@ -31,6 +31,6 @@ public class ChatRoomEntity extends BaseEntity {
     }
 
     public ChatRoom toDomain() {
-        return ChatRoom.of(id, name, hostId);
+        return ChatRoom.of(id, name, lighteningId, hostId);
     }
 }
