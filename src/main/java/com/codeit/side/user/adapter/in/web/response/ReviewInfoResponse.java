@@ -14,8 +14,10 @@ public record ReviewInfoResponse(
         LocalDateTime createdAt,
         Long lighteningId,
         String title,
+        String city,
         String town,
         String lighteningImageUrl,
+        LocalDateTime targetAt,
         Long userId,
         String nickname,
         String userImageUrl
@@ -32,8 +34,10 @@ public record ReviewInfoResponse(
                 review.getCreatedAt(),
                 lightening.getId(),
                 lightening.getTitle(),
+                lightening.getCity(),
                 lightening.getTown(),
                 lightening.getHasImage() ? "https://codeit-doit.s3.ap-northeast-2.amazonaws.com/lightening/%s/image.jpg".formatted(lightening.getId()) : "",
+                lightening.getTargetAt(),
                 user.getId(),
                 user.getNickname(),
                 user.isHasImage() ? "https://codeit-doit.s3.ap-northeast-2.amazonaws.com/user/%s/image.jpg".formatted(user.getId()) : ""
