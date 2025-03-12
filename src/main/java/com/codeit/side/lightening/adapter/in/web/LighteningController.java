@@ -31,8 +31,8 @@ public class LighteningController {
     ) {
         String email = getEmail(true);
         Lightening lighteningModel = lighteningRequest.toModel(hasImage(image));
-        Lightening savedLightening = lighteningUseCase.save(email, lighteningModel, image);
-        return ResponseEntity.ok(CreateLighteningResponse.from(savedLightening.getId()));
+        LighteningChatRoom lighteningChatRoom = lighteningUseCase.save(email, lighteningModel, image);
+        return ResponseEntity.ok(CreateLighteningResponse.from(lighteningChatRoom));
     }
 
     @PostMapping("/{id}/like")

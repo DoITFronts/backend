@@ -10,14 +10,14 @@ import java.util.stream.Stream;
 @Getter
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 public class ChatMessages {
-    private final List<ChatMessage> messages;
+    private final List<UserChatMessage> messages;
     private final boolean isLast;
 
-    public static ChatMessages of(List<ChatMessage> messages, boolean isLast) {
+    public static ChatMessages of(List<UserChatMessage> messages, boolean isLast) {
         return new ChatMessages(messages, isLast);
     }
 
-    public Stream<ChatMessage> stream() {
+    public Stream<UserChatMessage> stream() {
         return messages.stream();
     }
 }

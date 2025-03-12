@@ -10,7 +10,7 @@ import java.util.List;
 public interface ChatMessageUseCase {
     void save(ChatMessage chatMessage);
 
-    void createChatRoom(String email, Long lighteningId, String chatRoomName);
+    ChatRoom createChatRoom(String email, Long lighteningId, String chatRoomName);
 
     List<ChatRoomInfo> findAllChatRooms(String email);
 

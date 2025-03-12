@@ -32,13 +32,13 @@ public class LighteningService implements LighteningUseCase {
 
     @Override
     @Transactional
-    public Lightening save(String email, Lightening lightening, MultipartFile image) {
+    public LighteningChatRoom save(String email, Lightening lightening, MultipartFile image) {
         fileUploader.validateImage(image);
         Lightening savedLightening = lighteningCommandRepository.save(email, lightening);
         lighteningCommandRepository.join(email, savedLightening.getId());
-        chatMessageUseCase.createChatRoom(email, savedLightening.getId(), savedLightening.getTitle());
+        ChatRoom chatRoom = chatMessageUseCase.createChatRoom(email, savedLightening.getId(), savedLightening.getTitle());
         fileUploader.uploadImageToS3(image, "lightening/" + savedLightening.getId(), "image.jpg", "jpg");
-        return savedLightening;
+        return LighteningChatRoom.of(savedLightening, chatRoom);
     }
 
     @Override

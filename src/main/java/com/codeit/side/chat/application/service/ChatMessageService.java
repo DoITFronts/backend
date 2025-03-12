@@ -4,10 +4,7 @@ import com.codeit.side.chat.application.port.in.ChatMessageUseCase;
 import com.codeit.side.chat.application.port.out.ChatMemberRepository;
 import com.codeit.side.chat.application.port.out.ChatMessageRepository;
 import com.codeit.side.chat.application.port.out.ChatRoomRepository;
-import com.codeit.side.chat.domain.ChatMessage;
-import com.codeit.side.chat.domain.ChatMessages;
-import com.codeit.side.chat.domain.ChatRoom;
-import com.codeit.side.chat.domain.ChatRoomInfo;
+import com.codeit.side.chat.domain.*;
 import com.codeit.side.chat.domain.command.ChatRoomCommand;
 import com.codeit.side.common.adapter.exception.IllegalRequestException;
 import com.codeit.side.user.application.port.out.UserQueryRepository;
@@ -19,6 +16,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @Primary
 @Service
@@ -38,12 +37,13 @@ public class ChatMessageService implements ChatMessageUseCase {
 
     @Override
     @Transactional
-    public void createChatRoom(String email, Long lighteningId, String chatRoomName) {
+    public ChatRoom createChatRoom(String email, Long lighteningId, String chatRoomName) {
         User host = userQueryRepository.getByEmail(email)
                 .toDomain();
         ChatRoomCommand userChatRoomCommand = ChatRoomCommand.of(chatRoomName, lighteningId, host.getId());
         ChatRoom chatRoom = chatRoomRepository.save(userChatRoomCommand);
         chatMemberRepository.save(chatRoom.getId(), userChatRoomCommand);
+        return chatRoom;
     }
 
     @Override
@@ -77,7 +77,21 @@ public class ChatMessageService implements ChatMessageUseCase {
         List<ChatMessage> messages = chatMessages.stream()
                 .limit(size)
                 .toList();
-        return ChatMessages.of(messages, isLast);
+        List<Long> userIds = extractUserIds(chatMessages);
+        Map<Long, User> idToUser = userQueryRepository.findAllByIds(userIds)
+                .stream()
+                .collect(Collectors.toMap(User::getId, Function.identity()));
+        List<UserChatMessage> userChatMessages = messages.stream()
+                .map(message -> UserChatMessage.of(message, idToUser.get(message.getUserId())))
+                .toList();
+        return ChatMessages.of(userChatMessages, isLast);
+    }
+
+    private List<Long> extractUserIds(List<ChatMessage> chatMessages) {
+        return chatMessages.stream()
+                .map(ChatMessage::getUserId)
+                .distinct()
+                .toList();
     }
 
     @Override
