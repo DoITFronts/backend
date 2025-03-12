@@ -1,5 +1,6 @@
 package com.codeit.side.user.adapter.in.web.response;
 
+import com.codeit.side.lightening.domain.Category;
 import com.codeit.side.lightening.domain.Lightening;
 import com.codeit.side.lightening.domain.Review;
 import com.codeit.side.user.domain.ReviewInfo;
@@ -13,6 +14,7 @@ public record ReviewInfoResponse(
         Integer rating,
         LocalDateTime createdAt,
         Long lighteningId,
+        Category category,
         String title,
         String city,
         String town,
@@ -33,6 +35,7 @@ public record ReviewInfoResponse(
                 review.getScore(),
                 review.getCreatedAt(),
                 lightening.getId(),
+                lightening.getCategory(),
                 lightening.getTitle(),
                 lightening.getCity(),
                 lightening.getTown(),
