@@ -7,6 +7,7 @@ import com.codeit.side.lightening.domain.LighteningInfo;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+import java.util.Set;
 
 public interface LighteningUseCase {
     LighteningChatRoom save(String email, Lightening lightening, MultipartFile image);
@@ -24,4 +25,6 @@ public interface LighteningUseCase {
     void update(String email, Long id, String description);
 
     void delete(String email, Long id);
+
+    void likesAll(String email, Set<Long> lighteningIds);
 }

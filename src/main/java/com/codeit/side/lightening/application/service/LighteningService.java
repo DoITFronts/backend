@@ -16,8 +16,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -105,6 +107,25 @@ public class LighteningService implements LighteningUseCase {
             throw new IllegalRequestException("해당 번개의 주최자가 아닙니다. lighteningId: %s, email: %s".formatted(id, email));
         }
         lighteningCommandRepository.delete(id);
+    }
+
+    @Override
+    @Transactional
+    public void likesAll(String email, Set<Long> lighteningIds) {
+        List<Lightening> lightenings = lighteningReadRepository.findAllBy(new ArrayList<>(lighteningIds));
+        if (lightenings.size() != lighteningIds.size()) {
+            List<Long> extractIds = extractNotExistingLighteningIds(lightenings, new ArrayList<>(lighteningIds));
+            throw new IllegalRequestException("존재하지 않는 번개가 포함되어 있습니다. lighteningIds: %s".formatted(extractIds));
+        }
+        lighteningCommandRepository.likesAll(email, lighteningIds);
+    }
+
+    private List<Long> extractNotExistingLighteningIds(List<Lightening> lightenings, List<Long> lighteningIds) {
+        Set<Long> target = lightenings.stream()
+                .map(Lightening::getId)
+                .collect(Collectors.toSet());
+        lighteningIds.removeAll(target);
+        return lighteningIds;
     }
 
     private List<LighteningInfo> createLighteningInfos(List<Lightening> lightenings, List<LighteningMember> lighteningMembers, List<ChatRoom> chatRooms, List<LighteningLike> lighteningLikes) {

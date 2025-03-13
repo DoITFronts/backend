@@ -12,6 +12,8 @@ import com.codeit.side.lightening.domain.Lightening;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
+import java.util.Set;
+
 @Repository
 @RequiredArgsConstructor
 public class LighteningCommandRepositoryImpl implements LighteningCommandRepository {
@@ -61,5 +63,20 @@ public class LighteningCommandRepositoryImpl implements LighteningCommandReposit
     public void delete(Long id) {
         lighteningJpaEntityRepository.findById(id)
                 .ifPresent(LighteningEntity::delete);
+    }
+
+    @Override
+    public void likesAll(String email, Set<Long> lighteningIds) {
+        lighteningIds.forEach(lighteningId -> {
+            likeLightening(email, lighteningId);
+        });
+    }
+
+    private void likeLightening(String email, Long lighteningId) {
+        lighteningLikeJpaEntityRepository.findByLighteningIdAndEmail(lighteningId, email)
+                .ifPresentOrElse(
+                        LighteningLikeEntity::like,
+                        () -> lighteningLikeJpaEntityRepository.save(LighteningLikeEntity.of(lighteningId, email))
+                );
     }
 }

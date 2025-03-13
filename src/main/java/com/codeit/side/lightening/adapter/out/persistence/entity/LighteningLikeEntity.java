@@ -40,6 +40,10 @@ public class LighteningLikeEntity extends BaseEntity {
         isDeleted = !isDeleted;
     }
 
+    public void like() {
+        isDeleted = false;
+    }
+
     public LighteningLike toDomain() {
         return LighteningLike.of(lighteningId, email);
     }

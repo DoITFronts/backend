@@ -1,6 +1,7 @@
 package com.codeit.side.lightening.adapter.in.web;
 
 import com.codeit.side.common.adapter.exception.AuthenticationFailedException;
+import com.codeit.side.lightening.adapter.in.web.request.LighteningLikesRequest;
 import com.codeit.side.lightening.adapter.in.web.request.LighteningRequest;
 import com.codeit.side.lightening.adapter.in.web.request.LighteningUpdateRequest;
 import com.codeit.side.lightening.adapter.in.web.response.CreateLighteningResponse;
@@ -39,6 +40,14 @@ public class LighteningController {
     public ResponseEntity<Void> like(@PathVariable Long id) {
         String email = getEmail(true);
         lighteningUseCase.like(email, id);
+        return ResponseEntity.ok()
+                .build();
+    }
+
+    @PostMapping("/like")
+    public ResponseEntity<Void> likesAll(@RequestBody @Valid LighteningLikesRequest request) {
+        String email = getEmail(true);
+        lighteningUseCase.likesAll(email, request.lighteningIds());
         return ResponseEntity.ok()
                 .build();
     }
