@@ -9,7 +9,12 @@ import lombok.Builder;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "lightening_likes")
+@Table(
+        name = "lightening_likes",
+        uniqueConstraints = {
+                @UniqueConstraint(columnNames = {"lightening_id", "email"})
+        }
+)
 @Builder(access = AccessLevel.PACKAGE)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)

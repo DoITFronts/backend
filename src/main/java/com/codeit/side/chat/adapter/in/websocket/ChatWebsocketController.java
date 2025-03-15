@@ -41,9 +41,12 @@ public class ChatWebsocketController {
                 ChatType.CHAT,
                 chatMessageReceived.getContent()
         );
-        String destination = "/topic/room/%s".formatted(id);
 
-        messagingTemplate.convertAndSend(destination, ChatMessageSend.of(chatMessage, ""));
+        String destination = "/topic/room/" + id;
+        System.out.println("destination = " + destination);
+
+        String userImage = user.isHasImage() ? "https://codeit-doit.s3.ap-northeast-2.amazonaws.com/user/%s/image.jpg".formatted(user.getId()) : "";
+        messagingTemplate.convertAndSend(destination, ChatMessageSend.of(chatMessage, userImage));
         chatMessageUseCase.save(chatMessage);
     }
 }

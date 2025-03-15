@@ -12,6 +12,7 @@ import com.codeit.side.lightening.domain.Lightening;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
 import java.util.Set;
 
 @Repository
@@ -31,11 +32,12 @@ public class LighteningCommandRepositoryImpl implements LighteningCommandReposit
 
     @Override
     public void like(String email, Long lighteningId) {
-        lighteningLikeJpaEntityRepository.findByLighteningIdAndEmail(lighteningId, email)
-                .ifPresentOrElse(
-                        LighteningLikeEntity::update,
-                        () -> lighteningLikeJpaEntityRepository.save(LighteningLikeEntity.of(lighteningId, email))
-                );
+        Optional<LighteningLikeEntity> lighteningLikeEntity = lighteningLikeJpaEntityRepository.findByLighteningIdAndEmail(lighteningId, email);
+        if (lighteningLikeEntity.isPresent()) {
+            lighteningLikeEntity.get().update();
+            return;
+        }
+        lighteningLikeJpaEntityRepository.save(LighteningLikeEntity.of(lighteningId, email));
     }
 
     @Override
@@ -73,10 +75,11 @@ public class LighteningCommandRepositoryImpl implements LighteningCommandReposit
     }
 
     private void likeLightening(String email, Long lighteningId) {
-        lighteningLikeJpaEntityRepository.findByLighteningIdAndEmail(lighteningId, email)
-                .ifPresentOrElse(
-                        LighteningLikeEntity::like,
-                        () -> lighteningLikeJpaEntityRepository.save(LighteningLikeEntity.of(lighteningId, email))
-                );
+        Optional<LighteningLikeEntity> lighteningLikeEntity = lighteningLikeJpaEntityRepository.findByLighteningIdAndEmail(lighteningId, email);
+        if (lighteningLikeEntity.isPresent()) {
+            lighteningLikeEntity.get().like();
+            return;
+        }
+        lighteningLikeJpaEntityRepository.save(LighteningLikeEntity.of(lighteningId, email));
     }
 }
