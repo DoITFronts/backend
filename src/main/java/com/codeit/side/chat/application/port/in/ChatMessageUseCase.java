@@ -23,4 +23,6 @@ public interface ChatMessageUseCase {
     ChatRoom getChatRoomByLighteningId(Long lighteningId);
 
     List<ChatRoom> findAllChatRoomsByLighteningIds(List<Long> lighteningIds);
+
+    void read(Long roomId, Long userId);
 }

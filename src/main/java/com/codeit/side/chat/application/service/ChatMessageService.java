@@ -3,6 +3,7 @@ package com.codeit.side.chat.application.service;
 import com.codeit.side.chat.adapter.out.persistence.entity.ChatMemberEntity;
 import com.codeit.side.chat.application.port.in.ChatMessageUseCase;
 import com.codeit.side.chat.application.port.out.ChatMemberRepository;
+import com.codeit.side.chat.application.port.out.ChatMessageReadRepository;
 import com.codeit.side.chat.application.port.out.ChatMessageRepository;
 import com.codeit.side.chat.application.port.out.ChatRoomRepository;
 import com.codeit.side.chat.domain.*;
@@ -29,6 +30,7 @@ public class ChatMessageService implements ChatMessageUseCase {
     private final UserQueryRepository userQueryRepository;
     private final ChatRoomRepository chatRoomRepository;
     private final ChatMemberRepository chatMemberRepository;
+    private final ChatMessageReadRepository chatMessageReadRepository;
 
     @Override
     @Transactional
@@ -38,7 +40,7 @@ public class ChatMessageService implements ChatMessageUseCase {
         List<Long> userIds = chatMemberEntities.stream()
                 .map(ChatMemberEntity::getUserId)
                 .toList();
-
+        chatMessageReadRepository.save(savedChatMessage.getRoomId(), userIds);
     }
 
     @Override
@@ -120,6 +122,12 @@ public class ChatMessageService implements ChatMessageUseCase {
     @Override
     public List<ChatRoom> findAllChatRoomsByLighteningIds(List<Long> lighteningIds) {
         return chatRoomRepository.findAllByLighteningIds(lighteningIds);
+    }
+
+    @Override
+    @Transactional
+    public void read(Long roomId, Long userId) {
+        chatMessageReadRepository.read(roomId, userId);
     }
 
     private List<ChatRoomInfo> createChatRoomInfos(List<ChatRoom> chatRooms, Map<Long, ChatMessage> allLastMessageByIds, Map<Long, Integer> idToMemberSize) {

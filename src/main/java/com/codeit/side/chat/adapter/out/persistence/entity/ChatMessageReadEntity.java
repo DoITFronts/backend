@@ -27,4 +27,8 @@ public class ChatMessageReadEntity {
     public static ChatMessageReadEntity of(Long chatRoomId, Long userId) {
         return new ChatMessageReadEntity(null, chatRoomId, userId, false);
     }
+
+    public void read() {
+        isRead = true;
+    }
 }
