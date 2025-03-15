@@ -46,7 +46,7 @@ public class ChatWebsocketController {
         System.out.println("destination = " + destination);
 
         String userImage = user.isHasImage() ? "https://codeit-doit.s3.ap-northeast-2.amazonaws.com/user/%s/image.jpg".formatted(user.getId()) : "";
-        messagingTemplate.convertAndSend(destination, ChatMessageSend.of(chatMessage, userImage));
         chatMessageUseCase.save(chatMessage);
+        messagingTemplate.convertAndSend(destination, ChatMessageSend.of(chatMessage, userImage));
     }
 }

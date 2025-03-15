@@ -1,5 +1,6 @@
 package com.codeit.side.chat.application.service;
 
+import com.codeit.side.chat.adapter.out.persistence.entity.ChatMemberEntity;
 import com.codeit.side.chat.application.port.in.ChatMessageUseCase;
 import com.codeit.side.chat.application.port.out.ChatMemberRepository;
 import com.codeit.side.chat.application.port.out.ChatMessageRepository;
@@ -32,7 +33,12 @@ public class ChatMessageService implements ChatMessageUseCase {
     @Override
     @Transactional
     public void save(ChatMessage chatMessage) {
-        chatMessageRepository.save(chatMessage);
+        ChatMessage savedChatMessage = chatMessageRepository.save(chatMessage);
+        List<ChatMemberEntity> chatMemberEntities = chatMemberRepository.findAllMemberById(savedChatMessage.getRoomId());
+        List<Long> userIds = chatMemberEntities.stream()
+                .map(ChatMemberEntity::getUserId)
+                .toList();
+
     }
 
     @Override
