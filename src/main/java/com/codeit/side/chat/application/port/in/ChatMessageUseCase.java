@@ -25,4 +25,8 @@ public interface ChatMessageUseCase {
     List<ChatRoom> findAllChatRoomsByLighteningIds(List<Long> lighteningIds);
 
     void read(Long roomId, Long userId);
+
+    void leaveChatRoom(Long id, String email);
+
+    void joinChatRoomByLighteningId(Long id, String email);
 }

@@ -108,10 +108,16 @@ public class ChatMessageService implements ChatMessageUseCase {
         User user = userQueryRepository.getByEmail(email)
                 .toDomain();
         ChatRoom chatRoom = chatRoomRepository.getBy(id);
-        if (chatMemberRepository.existsByChatRoomIdAndUserId(chatRoom.getId(), user.getId())) {
-            throw new IllegalRequestException("이미 채팅방에 참여하고 있는 사용자입니다.");
-        }
-        chatMemberRepository.join(id, user.getId());
+        chatMemberRepository.join(chatRoom.getId(), user.getId());
+    }
+
+    @Override
+    @Transactional
+    public void joinChatRoomByLighteningId(Long id, String email) {
+        User user = userQueryRepository.getByEmail(email)
+                .toDomain();
+        ChatRoom chatRoom = chatRoomRepository.getByLighteningId(id);
+        chatMemberRepository.join(chatRoom.getId(), user.getId());
     }
 
     @Override
@@ -128,6 +134,15 @@ public class ChatMessageService implements ChatMessageUseCase {
     @Transactional
     public void read(Long roomId, Long userId) {
         chatMessageReadRepository.read(roomId, userId);
+    }
+
+    @Override
+    @Transactional
+    public void leaveChatRoom(Long id, String email) {
+        User user = userQueryRepository.getByEmail(email)
+                .toDomain();
+        ChatRoom chatRoom = chatRoomRepository.getByLighteningId(id);
+        chatMemberRepository.leave(chatRoom.getId(), user.getId());
     }
 
     private List<ChatRoomInfo> createChatRoomInfos(List<ChatRoom> chatRooms, Map<Long, ChatMessage> allLastMessageByIds, Map<Long, Integer> idToMemberSize) {

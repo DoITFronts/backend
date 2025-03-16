@@ -16,4 +16,6 @@ public interface ChatMemberRepository {
     void join(Long id, Long userId);
 
     List<ChatMemberEntity> findAllMemberById(Long roomId);
+
+    void leave(Long chatRoomId, Long userId);
 }

@@ -56,6 +56,7 @@ public class LighteningService implements LighteningUseCase {
         Lightening lightening = lighteningReadRepository.getById(id);
         validateLightening(email, lightening);
         lighteningCommandRepository.join(email, lightening.getId());
+        chatMessageUseCase.joinChatRoomByLighteningId(id, email);
     }
 
     @Override
@@ -66,6 +67,7 @@ public class LighteningService implements LighteningUseCase {
             throw new UserNotJoinedException(lightening.getId());
         }
         lighteningCommandRepository.leave(email, lightening.getId());
+        chatMessageUseCase.leaveChatRoom(id, email);
     }
 
     @Override
