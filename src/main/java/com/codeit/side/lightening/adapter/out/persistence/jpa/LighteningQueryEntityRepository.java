@@ -66,7 +66,6 @@ public class LighteningQueryEntityRepository {
                 .addCityCondition(lighteningCondition.getCity())
                 .addTownCondition(lighteningCondition.getTown())
                 .addTargetAtCondition(lighteningCondition.getTargetAt())
-                .addNotHostCondition(email)
                 .build();
     }
 
@@ -75,7 +74,6 @@ public class LighteningQueryEntityRepository {
                 .addIsInactiveCondition(false)
                 .addCategoryCondition(lighteningCondition.getCategory())
                 .addMyCreatedCondition(lighteningCondition.getCreatedBy())
-                .addNotHostCondition(email)
                 .build();
     }
 
@@ -87,7 +85,6 @@ public class LighteningQueryEntityRepository {
                 .addTownCondition(lighteningCondition.getTown())
                 .addTargetAtCondition(lighteningCondition.getTargetAt())
                 .addLikeCondition(email)
-                .addNotHostCondition(email)
                 .build();
     }
 
