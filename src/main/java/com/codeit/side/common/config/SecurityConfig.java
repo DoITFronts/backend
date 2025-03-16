@@ -29,6 +29,8 @@ public class SecurityConfig {
     private static final List<String> ALLOWED_ORIGINS = List.of(
             "http://localhost:3000",
             "http://127.0.0.1:5500",
+            "https://doitz.netlify.app",
+            "https://calit.netlify.app",
             "https://www.thunderting.site"
     );
     private static final List<String> ALLOWED_METHODS = List.of("GET", "POST", "PUT", "DELETE");
