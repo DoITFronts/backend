@@ -52,28 +52,30 @@ public class LighteningQueryEntityRepository {
 
     private BooleanBuilder createQueryBuilder(LighteningCondition lighteningCondition, String email) {
         return switch (lighteningCondition.getConditionType()) {
-            case LIST -> listConditionBuilder(lighteningCondition);
-            case MY_CREATED -> myCreatedConditionBuilder(lighteningCondition);
+            case LIST -> listConditionBuilder(lighteningCondition, email);
+            case MY_CREATED -> myCreatedConditionBuilder(lighteningCondition, email);
             case LIKE -> likeConditionBuilder(lighteningCondition, email);
             case MY_JOINED -> myJoinedConditionBuilder(lighteningCondition, email);
         };
     }
 
-    private BooleanBuilder listConditionBuilder(LighteningCondition lighteningCondition) {
+    private BooleanBuilder listConditionBuilder(LighteningCondition lighteningCondition, String email) {
         return LighteningQueryBuilder.Builder()
                 .addIsInactiveCondition(false)
                 .addCategoryCondition(lighteningCondition.getCategory())
                 .addCityCondition(lighteningCondition.getCity())
                 .addTownCondition(lighteningCondition.getTown())
                 .addTargetAtCondition(lighteningCondition.getTargetAt())
+                .addNotHostCondition(email)
                 .build();
     }
 
-    private BooleanBuilder myCreatedConditionBuilder(LighteningCondition lighteningCondition) {
+    private BooleanBuilder myCreatedConditionBuilder(LighteningCondition lighteningCondition, String email) {
         return LighteningQueryBuilder.Builder()
                 .addIsInactiveCondition(false)
                 .addCategoryCondition(lighteningCondition.getCategory())
                 .addMyCreatedCondition(lighteningCondition.getCreatedBy())
+                .addNotHostCondition(email)
                 .build();
     }
 
@@ -85,6 +87,7 @@ public class LighteningQueryEntityRepository {
                 .addTownCondition(lighteningCondition.getTown())
                 .addTargetAtCondition(lighteningCondition.getTargetAt())
                 .addLikeCondition(email)
+                .addNotHostCondition(email)
                 .build();
     }
 
@@ -93,6 +96,7 @@ public class LighteningQueryEntityRepository {
                 .addIsInactiveCondition(false)
                 .addCategoryCondition(lighteningCondition.getCategory())
                 .addMyJoinedCondition(email)
+                .addNotHostCondition(email)
                 .build();
     }
 
