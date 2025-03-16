@@ -1,6 +1,7 @@
 package com.codeit.side.chat.application.service;
 
 import com.codeit.side.chat.adapter.out.persistence.entity.ChatMemberEntity;
+import com.codeit.side.chat.adapter.out.persistence.entity.ChatMessageReadEntity;
 import com.codeit.side.chat.application.port.in.ChatMessageUseCase;
 import com.codeit.side.chat.application.port.out.ChatMemberRepository;
 import com.codeit.side.chat.application.port.out.ChatMessageReadRepository;
@@ -118,6 +119,28 @@ public class ChatMessageService implements ChatMessageUseCase {
                 .toDomain();
         ChatRoom chatRoom = chatRoomRepository.getByLighteningId(id);
         chatMemberRepository.join(chatRoom.getId(), user.getId());
+    }
+
+    @Override
+    public Map<Long, Integer> countAllUnreadMessages(String email, List<Long> chatRoomIds) {
+        if ("".equals(email)) {
+            return Map.of();
+        }
+        User user = userQueryRepository.getByEmail(email)
+                .toDomain();
+        List<ChatMessageReadEntity> chatMessageReadEntities = chatMessageReadRepository.findAllUnreadMessages(user.getId(), chatRoomIds);
+        return chatMessageReadEntities.stream()
+                .collect(Collectors.groupingBy(ChatMessageReadEntity::getChatRoomId, Collectors.collectingAndThen(Collectors.counting(), Long::intValue)));
+    }
+
+    @Override
+    public int countUnreadMessages(Long chatRoomId, String email) {
+        if ("".equals(email)) {
+            return 0;
+        }
+        User user = userQueryRepository.getByEmail(email)
+                .toDomain();
+        return chatMessageReadRepository.findUnreadMessagesBy(chatRoomId, user.getId());
     }
 
     @Override

@@ -26,4 +26,15 @@ public class ChatMessageReadRepositoryImpl implements ChatMessageReadRepository 
         chatMessageReadJpaRepository.findAllByChatRoomIdAndUserIdAndIsReadFalse(roomId, userId)
                 .forEach(ChatMessageReadEntity::read);
     }
+
+    @Override
+    public List<ChatMessageReadEntity> findAllUnreadMessages(Long userId, List<Long> chatRoomIds) {
+        return chatMessageReadJpaRepository.findAllByUserIdAndChatRoomIdInAndIsReadFalse(userId, chatRoomIds);
+    }
+
+    @Override
+    public int findUnreadMessagesBy(Long chatRoomId, Long userId) {
+        return chatMessageReadJpaRepository.findAllByChatRoomIdAndUserIdAndIsReadFalse(chatRoomId, userId)
+                .size();
+    }
 }

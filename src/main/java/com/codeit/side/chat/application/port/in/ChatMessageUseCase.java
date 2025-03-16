@@ -6,6 +6,7 @@ import com.codeit.side.chat.domain.ChatRoom;
 import com.codeit.side.chat.domain.ChatRoomInfo;
 
 import java.util.List;
+import java.util.Map;
 
 public interface ChatMessageUseCase {
     void save(ChatMessage chatMessage);
@@ -29,4 +30,8 @@ public interface ChatMessageUseCase {
     void leaveChatRoom(Long id, String email);
 
     void joinChatRoomByLighteningId(Long id, String email);
+
+    Map<Long, Integer> countAllUnreadMessages(String email, List<Long> chatRoomIds);
+
+    int countUnreadMessages(Long lighteningId, String email);
 }

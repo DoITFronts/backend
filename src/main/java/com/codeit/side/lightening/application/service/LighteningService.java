@@ -76,7 +76,8 @@ public class LighteningService implements LighteningUseCase {
         List<LighteningMember> lighteningMember = lighteningReadRepository.findAllMembersBy(lightening.getId());
         boolean isLighteningLike = lighteningReadRepository.findLighteningLikeBy(email, lightening.getId());
         ChatRoom chatRoom = chatMessageUseCase.getChatRoomByLighteningId(lightening.getId());
-        return createLighteningInfo(lightening, lighteningMember, chatRoom, isLighteningLike);
+        int unreadCount = chatMessageUseCase.countUnreadMessages(chatRoom.getId(), email);
+        return createLighteningInfo(lightening, lighteningMember, chatRoom, isLighteningLike, unreadCount);
     }
 
     @Override
@@ -87,8 +88,12 @@ public class LighteningService implements LighteningUseCase {
                 .toList();
         List<LighteningMember> lighteningMembers = lighteningReadRepository.findAllMembersBy(lighteningIds);
         List<LighteningLike> lighteningLikes = lighteningReadRepository.findLighteningLikesBy(email, lighteningIds);
-        List<ChatRoom> chatRoomIds = chatMessageUseCase.findAllChatRoomsByLighteningIds(lighteningIds);
-        return createLighteningInfos(lightenings, lighteningMembers, chatRoomIds, lighteningLikes);
+        List<ChatRoom> chatRooms = chatMessageUseCase.findAllChatRoomsByLighteningIds(lighteningIds);
+        List<Long> chatRoomIds = chatRooms.stream()
+                .map(ChatRoom::getId)
+                .toList();
+        Map<Long, Integer> idToUnreadCount = chatMessageUseCase.countAllUnreadMessages(email, chatRoomIds);
+        return createLighteningInfos(lightenings, lighteningMembers, chatRooms, lighteningLikes, idToUnreadCount);
     }
 
     @Override
@@ -130,7 +135,7 @@ public class LighteningService implements LighteningUseCase {
         return lighteningIds;
     }
 
-    private List<LighteningInfo> createLighteningInfos(List<Lightening> lightenings, List<LighteningMember> lighteningMembers, List<ChatRoom> chatRooms, List<LighteningLike> lighteningLikes) {
+    private List<LighteningInfo> createLighteningInfos(List<Lightening> lightenings, List<LighteningMember> lighteningMembers, List<ChatRoom> chatRooms, List<LighteningLike> lighteningLikes, Map<Long, Integer> idToUnreadCount) {
         Map<Long, List<LighteningMember>> idToLighteningMembers = lighteningMembers.stream()
                 .collect(Collectors.groupingBy(LighteningMember::getLighteningId));
         Map<Long, LighteningLike> idToLighteningLike = lighteningLikes.stream()
@@ -139,12 +144,21 @@ public class LighteningService implements LighteningUseCase {
                 .collect(Collectors.toMap(ChatRoom::getLighteningId, Function.identity()));
 
         return lightenings.stream()
-                .map(lightening -> createLighteningInfo(lightening, idToLighteningMembers.getOrDefault(lightening.getId(), List.of()), idToChatRoom.get(lightening.getId()), idToLighteningLike.containsKey(lightening.getId())))
+                .map(lightening -> {
+                    ChatRoom chatRoom = idToChatRoom.get(lightening.getId());
+                    return createLighteningInfo(
+                            lightening,
+                            idToLighteningMembers.getOrDefault(lightening.getId(), List.of()),
+                            chatRoom,
+                            idToLighteningLike.containsKey(lightening.getId()),
+                            idToUnreadCount.getOrDefault(chatRoom.getLighteningId(), 0)
+                    );
+                })
                 .toList();
     }
 
-    private LighteningInfo createLighteningInfo(Lightening lightening, List<LighteningMember> lighteningMember, ChatRoom chatRoom, boolean isLighteningLike) {
-        return LighteningInfo.of(lightening, lighteningMember, chatRoom, isLighteningLike);
+    private LighteningInfo createLighteningInfo(Lightening lightening, List<LighteningMember> lighteningMember, ChatRoom chatRoom, boolean isLighteningLike, Integer unreadCount) {
+        return LighteningInfo.of(lightening, lighteningMember, chatRoom, isLighteningLike, unreadCount);
     }
 
     private void validateLightening(String email, Lightening lightening) {
