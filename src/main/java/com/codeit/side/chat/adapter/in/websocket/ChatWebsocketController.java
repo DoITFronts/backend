@@ -41,9 +41,21 @@ public class ChatWebsocketController {
                 ChatType.CHAT,
                 chatMessageReceived.getContent()
         );
-        String destination = "/topic/room/%s".formatted(id);
 
-        messagingTemplate.convertAndSend(destination, ChatMessageSend.of(chatMessage, ""));
+        String destination = "/topic/room/" + id;
+
+        String userImage = user.isHasImage() ? "https://codeit-doit.s3.ap-northeast-2.amazonaws.com/user/%s/image.jpg".formatted(user.getId()) : "";
         chatMessageUseCase.save(chatMessage);
+        messagingTemplate.convertAndSend(destination, ChatMessageSend.of(chatMessage, userImage));
+    }
+
+    @MessageMapping("/room/{id}/read")
+    public void readMessage(
+            @Header(name = "simpSessionAttributes") Map<String, Object> sessionAttributes,
+            @DestinationVariable Long id
+    ) {
+        User user = (User) sessionAttributes.get("user");
+        chatMessageUseCase.findChatRoomBy(id, user.getId());
+        chatMessageUseCase.read(id, user.getId());
     }
 }

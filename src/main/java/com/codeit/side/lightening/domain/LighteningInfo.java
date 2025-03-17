@@ -14,13 +14,15 @@ public class LighteningInfo {
     private final List<LighteningMember> lighteningMembers;
     private final ChatRoom chatRoom;
     private final boolean isLiked;
+    private final int unreadCount;
 
     public static LighteningInfo of(
             Lightening lightening,
             List<LighteningMember> lighteningMembers,
             ChatRoom chatRoom,
-            boolean isLiked
-    ){
-        return new LighteningInfo(lightening, lighteningMembers, chatRoom, isLiked);
+            boolean isLiked,
+            int unreadCount
+    ) {
+        return new LighteningInfo(lightening, lighteningMembers, chatRoom, isLiked, unreadCount);
     }
 }

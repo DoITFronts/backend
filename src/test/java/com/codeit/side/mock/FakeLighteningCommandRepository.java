@@ -5,6 +5,7 @@ import com.codeit.side.lightening.domain.Lightening;
 import com.codeit.side.lightening.domain.LighteningFixture;
 
 import java.util.List;
+import java.util.Set;
 
 public class FakeLighteningCommandRepository implements LighteningCommandRepository {
     private final List<Lightening> lightenings;
@@ -43,6 +44,11 @@ public class FakeLighteningCommandRepository implements LighteningCommandReposit
 
     @Override
     public void delete(Long id) {
+
+    }
+
+    @Override
+    public void likesAll(String email, Set<Long> lighteningIds) {
 
     }
 }

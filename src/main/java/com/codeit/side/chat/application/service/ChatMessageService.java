@@ -1,13 +1,13 @@
 package com.codeit.side.chat.application.service;
 
+import com.codeit.side.chat.adapter.out.persistence.entity.ChatMemberEntity;
+import com.codeit.side.chat.adapter.out.persistence.entity.ChatMessageReadEntity;
 import com.codeit.side.chat.application.port.in.ChatMessageUseCase;
 import com.codeit.side.chat.application.port.out.ChatMemberRepository;
+import com.codeit.side.chat.application.port.out.ChatMessageReadRepository;
 import com.codeit.side.chat.application.port.out.ChatMessageRepository;
 import com.codeit.side.chat.application.port.out.ChatRoomRepository;
-import com.codeit.side.chat.domain.ChatMessage;
-import com.codeit.side.chat.domain.ChatMessages;
-import com.codeit.side.chat.domain.ChatRoom;
-import com.codeit.side.chat.domain.ChatRoomInfo;
+import com.codeit.side.chat.domain.*;
 import com.codeit.side.chat.domain.command.ChatRoomCommand;
 import com.codeit.side.common.adapter.exception.IllegalRequestException;
 import com.codeit.side.user.application.port.out.UserQueryRepository;
@@ -19,6 +19,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @Primary
 @Service
@@ -29,21 +31,28 @@ public class ChatMessageService implements ChatMessageUseCase {
     private final UserQueryRepository userQueryRepository;
     private final ChatRoomRepository chatRoomRepository;
     private final ChatMemberRepository chatMemberRepository;
+    private final ChatMessageReadRepository chatMessageReadRepository;
 
     @Override
     @Transactional
     public void save(ChatMessage chatMessage) {
-        chatMessageRepository.save(chatMessage);
+        ChatMessage savedChatMessage = chatMessageRepository.save(chatMessage);
+        List<ChatMemberEntity> chatMemberEntities = chatMemberRepository.findAllMemberById(savedChatMessage.getRoomId());
+        List<Long> userIds = chatMemberEntities.stream()
+                .map(ChatMemberEntity::getUserId)
+                .toList();
+        chatMessageReadRepository.save(savedChatMessage.getRoomId(), userIds);
     }
 
     @Override
     @Transactional
-    public void createChatRoom(String email, Long lighteningId, String chatRoomName) {
+    public ChatRoom createChatRoom(String email, Long lighteningId, String chatRoomName) {
         User host = userQueryRepository.getByEmail(email)
                 .toDomain();
         ChatRoomCommand userChatRoomCommand = ChatRoomCommand.of(chatRoomName, lighteningId, host.getId());
         ChatRoom chatRoom = chatRoomRepository.save(userChatRoomCommand);
         chatMemberRepository.save(chatRoom.getId(), userChatRoomCommand);
+        return chatRoom;
     }
 
     @Override
@@ -77,7 +86,21 @@ public class ChatMessageService implements ChatMessageUseCase {
         List<ChatMessage> messages = chatMessages.stream()
                 .limit(size)
                 .toList();
-        return ChatMessages.of(messages, isLast);
+        List<Long> userIds = extractUserIds(chatMessages);
+        Map<Long, User> idToUser = userQueryRepository.findAllByIds(userIds)
+                .stream()
+                .collect(Collectors.toMap(User::getId, Function.identity()));
+        List<UserChatMessage> userChatMessages = messages.stream()
+                .map(message -> UserChatMessage.of(message, idToUser.get(message.getUserId())))
+                .toList();
+        return ChatMessages.of(userChatMessages, isLast);
+    }
+
+    private List<Long> extractUserIds(List<ChatMessage> chatMessages) {
+        return chatMessages.stream()
+                .map(ChatMessage::getUserId)
+                .distinct()
+                .toList();
     }
 
     @Override
@@ -86,10 +109,38 @@ public class ChatMessageService implements ChatMessageUseCase {
         User user = userQueryRepository.getByEmail(email)
                 .toDomain();
         ChatRoom chatRoom = chatRoomRepository.getBy(id);
-        if (chatMemberRepository.existsByChatRoomIdAndUserId(chatRoom.getId(), user.getId())) {
-            throw new IllegalRequestException("이미 채팅방에 참여하고 있는 사용자입니다.");
+        chatMemberRepository.join(chatRoom.getId(), user.getId());
+    }
+
+    @Override
+    @Transactional
+    public void joinChatRoomByLighteningId(Long id, String email) {
+        User user = userQueryRepository.getByEmail(email)
+                .toDomain();
+        ChatRoom chatRoom = chatRoomRepository.getByLighteningId(id);
+        chatMemberRepository.join(chatRoom.getId(), user.getId());
+    }
+
+    @Override
+    public Map<Long, Integer> countAllUnreadMessages(String email, List<Long> chatRoomIds) {
+        if ("".equals(email)) {
+            return Map.of();
         }
-        chatMemberRepository.join(id, user.getId());
+        User user = userQueryRepository.getByEmail(email)
+                .toDomain();
+        List<ChatMessageReadEntity> chatMessageReadEntities = chatMessageReadRepository.findAllUnreadMessages(user.getId(), chatRoomIds);
+        return chatMessageReadEntities.stream()
+                .collect(Collectors.groupingBy(ChatMessageReadEntity::getChatRoomId, Collectors.collectingAndThen(Collectors.counting(), Long::intValue)));
+    }
+
+    @Override
+    public int countUnreadMessages(Long chatRoomId, String email) {
+        if ("".equals(email)) {
+            return 0;
+        }
+        User user = userQueryRepository.getByEmail(email)
+                .toDomain();
+        return chatMessageReadRepository.findUnreadMessagesBy(chatRoomId, user.getId());
     }
 
     @Override
@@ -100,6 +151,21 @@ public class ChatMessageService implements ChatMessageUseCase {
     @Override
     public List<ChatRoom> findAllChatRoomsByLighteningIds(List<Long> lighteningIds) {
         return chatRoomRepository.findAllByLighteningIds(lighteningIds);
+    }
+
+    @Override
+    @Transactional
+    public void read(Long roomId, Long userId) {
+        chatMessageReadRepository.read(roomId, userId);
+    }
+
+    @Override
+    @Transactional
+    public void leaveChatRoom(Long id, String email) {
+        User user = userQueryRepository.getByEmail(email)
+                .toDomain();
+        ChatRoom chatRoom = chatRoomRepository.getByLighteningId(id);
+        chatMemberRepository.leave(chatRoom.getId(), user.getId());
     }
 
     private List<ChatRoomInfo> createChatRoomInfos(List<ChatRoom> chatRooms, Map<Long, ChatMessage> allLastMessageByIds, Map<Long, Integer> idToMemberSize) {

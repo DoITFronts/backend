@@ -30,6 +30,7 @@ public record LighteningResponse(
         boolean isConfirmed,
         boolean isCompleted,
         Long chatRoomId,
+        Integer unreadCount,
         List<LighteningMemberResponse> participants
 ) {
     public static LighteningResponse from(String email, LighteningInfo lighteningInfo) {
@@ -62,6 +63,7 @@ public record LighteningResponse(
                 lighteningMemberResponse.size() >= lightening.getMinCapacity(),
                 lighteningMemberResponse.size() >= lightening.getCapacity(),
                 lighteningInfo.getChatRoom().getId(),
+                lighteningInfo.getUnreadCount(),
                 lighteningMemberResponse
         );
     }

@@ -16,8 +16,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -32,13 +34,13 @@ public class LighteningService implements LighteningUseCase {
 
     @Override
     @Transactional
-    public Lightening save(String email, Lightening lightening, MultipartFile image) {
+    public LighteningChatRoom save(String email, Lightening lightening, MultipartFile image) {
         fileUploader.validateImage(image);
         Lightening savedLightening = lighteningCommandRepository.save(email, lightening);
         lighteningCommandRepository.join(email, savedLightening.getId());
-        chatMessageUseCase.createChatRoom(email, savedLightening.getId(), savedLightening.getTitle());
+        ChatRoom chatRoom = chatMessageUseCase.createChatRoom(email, savedLightening.getId(), savedLightening.getTitle());
         fileUploader.uploadImageToS3(image, "lightening/" + savedLightening.getId(), "image.jpg", "jpg");
-        return savedLightening;
+        return LighteningChatRoom.of(savedLightening, chatRoom);
     }
 
     @Override
@@ -54,6 +56,7 @@ public class LighteningService implements LighteningUseCase {
         Lightening lightening = lighteningReadRepository.getById(id);
         validateLightening(email, lightening);
         lighteningCommandRepository.join(email, lightening.getId());
+        chatMessageUseCase.joinChatRoomByLighteningId(id, email);
     }
 
     @Override
@@ -64,6 +67,7 @@ public class LighteningService implements LighteningUseCase {
             throw new UserNotJoinedException(lightening.getId());
         }
         lighteningCommandRepository.leave(email, lightening.getId());
+        chatMessageUseCase.leaveChatRoom(id, email);
     }
 
     @Override
@@ -72,7 +76,8 @@ public class LighteningService implements LighteningUseCase {
         List<LighteningMember> lighteningMember = lighteningReadRepository.findAllMembersBy(lightening.getId());
         boolean isLighteningLike = lighteningReadRepository.findLighteningLikeBy(email, lightening.getId());
         ChatRoom chatRoom = chatMessageUseCase.getChatRoomByLighteningId(lightening.getId());
-        return createLighteningInfo(lightening, lighteningMember, chatRoom, isLighteningLike);
+        int unreadCount = chatMessageUseCase.countUnreadMessages(chatRoom.getId(), email);
+        return createLighteningInfo(lightening, lighteningMember, chatRoom, isLighteningLike, unreadCount);
     }
 
     @Override
@@ -83,8 +88,12 @@ public class LighteningService implements LighteningUseCase {
                 .toList();
         List<LighteningMember> lighteningMembers = lighteningReadRepository.findAllMembersBy(lighteningIds);
         List<LighteningLike> lighteningLikes = lighteningReadRepository.findLighteningLikesBy(email, lighteningIds);
-        List<ChatRoom> chatRoomIds = chatMessageUseCase.findAllChatRoomsByLighteningIds(lighteningIds);
-        return createLighteningInfos(lightenings, lighteningMembers, chatRoomIds, lighteningLikes);
+        List<ChatRoom> chatRooms = chatMessageUseCase.findAllChatRoomsByLighteningIds(lighteningIds);
+        List<Long> chatRoomIds = chatRooms.stream()
+                .map(ChatRoom::getId)
+                .toList();
+        Map<Long, Integer> idToUnreadCount = chatMessageUseCase.countAllUnreadMessages(email, chatRoomIds);
+        return createLighteningInfos(lightenings, lighteningMembers, chatRooms, lighteningLikes, idToUnreadCount);
     }
 
     @Override
@@ -107,7 +116,26 @@ public class LighteningService implements LighteningUseCase {
         lighteningCommandRepository.delete(id);
     }
 
-    private List<LighteningInfo> createLighteningInfos(List<Lightening> lightenings, List<LighteningMember> lighteningMembers, List<ChatRoom> chatRooms, List<LighteningLike> lighteningLikes) {
+    @Override
+    @Transactional
+    public void likesAll(String email, Set<Long> lighteningIds) {
+        List<Lightening> lightenings = lighteningReadRepository.findAllBy(new ArrayList<>(lighteningIds));
+        if (lightenings.size() != lighteningIds.size()) {
+            List<Long> extractIds = extractNotExistingLighteningIds(lightenings, new ArrayList<>(lighteningIds));
+            throw new IllegalRequestException("존재하지 않는 번개가 포함되어 있습니다. lighteningIds: %s".formatted(extractIds));
+        }
+        lighteningCommandRepository.likesAll(email, lighteningIds);
+    }
+
+    private List<Long> extractNotExistingLighteningIds(List<Lightening> lightenings, List<Long> lighteningIds) {
+        Set<Long> target = lightenings.stream()
+                .map(Lightening::getId)
+                .collect(Collectors.toSet());
+        lighteningIds.removeAll(target);
+        return lighteningIds;
+    }
+
+    private List<LighteningInfo> createLighteningInfos(List<Lightening> lightenings, List<LighteningMember> lighteningMembers, List<ChatRoom> chatRooms, List<LighteningLike> lighteningLikes, Map<Long, Integer> idToUnreadCount) {
         Map<Long, List<LighteningMember>> idToLighteningMembers = lighteningMembers.stream()
                 .collect(Collectors.groupingBy(LighteningMember::getLighteningId));
         Map<Long, LighteningLike> idToLighteningLike = lighteningLikes.stream()
@@ -116,12 +144,21 @@ public class LighteningService implements LighteningUseCase {
                 .collect(Collectors.toMap(ChatRoom::getLighteningId, Function.identity()));
 
         return lightenings.stream()
-                .map(lightening -> createLighteningInfo(lightening, idToLighteningMembers.getOrDefault(lightening.getId(), List.of()), idToChatRoom.get(lightening.getId()), idToLighteningLike.containsKey(lightening.getId())))
+                .map(lightening -> {
+                    ChatRoom chatRoom = idToChatRoom.get(lightening.getId());
+                    return createLighteningInfo(
+                            lightening,
+                            idToLighteningMembers.getOrDefault(lightening.getId(), List.of()),
+                            chatRoom,
+                            idToLighteningLike.containsKey(lightening.getId()),
+                            idToUnreadCount.getOrDefault(chatRoom.getLighteningId(), 0)
+                    );
+                })
                 .toList();
     }
 
-    private LighteningInfo createLighteningInfo(Lightening lightening, List<LighteningMember> lighteningMember, ChatRoom chatRoom, boolean isLighteningLike) {
-        return LighteningInfo.of(lightening, lighteningMember, chatRoom, isLighteningLike);
+    private LighteningInfo createLighteningInfo(Lightening lightening, List<LighteningMember> lighteningMember, ChatRoom chatRoom, boolean isLighteningLike, Integer unreadCount) {
+        return LighteningInfo.of(lightening, lighteningMember, chatRoom, isLighteningLike, unreadCount);
     }
 
     private void validateLightening(String email, Lightening lightening) {

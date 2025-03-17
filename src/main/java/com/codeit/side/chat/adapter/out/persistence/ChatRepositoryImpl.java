@@ -22,8 +22,9 @@ public class ChatRepositoryImpl implements ChatMessageRepository {
 
     @Override
     @Transactional
-    public void save(ChatMessage chatMessage) {
-        chatMessageJpaRepository.save(ChatMessageEntity.from(chatMessage));
+    public ChatMessage save(ChatMessage chatMessage) {
+        return chatMessageJpaRepository.save(ChatMessageEntity.from(chatMessage))
+                .toDomain();
     }
 
     @Override

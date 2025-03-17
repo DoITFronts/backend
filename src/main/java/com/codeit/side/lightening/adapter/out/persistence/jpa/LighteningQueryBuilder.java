@@ -88,4 +88,11 @@ public class LighteningQueryBuilder {
         }
         return this;
     }
+
+    public LighteningQueryBuilder addNotHostCondition(String email) {
+        if (email != null) {
+            booleanBuilder.and(lighteningEntity.host.ne(email));
+        }
+        return this;
+    }
 }

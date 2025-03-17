@@ -1,5 +1,6 @@
 package com.codeit.side.chat.application.port.out;
 
+import com.codeit.side.chat.adapter.out.persistence.entity.ChatMemberEntity;
 import com.codeit.side.chat.domain.command.ChatRoomCommand;
 
 import java.util.List;
@@ -13,4 +14,8 @@ public interface ChatMemberRepository {
     boolean existsByChatRoomIdAndUserId(Long id, Long userId);
 
     void join(Long id, Long userId);
+
+    List<ChatMemberEntity> findAllMemberById(Long roomId);
+
+    void leave(Long chatRoomId, Long userId);
 }

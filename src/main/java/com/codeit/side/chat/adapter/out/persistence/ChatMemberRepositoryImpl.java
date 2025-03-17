@@ -41,4 +41,14 @@ public class ChatMemberRepositoryImpl implements ChatMemberRepository {
     public void join(Long id, Long userId) {
         chatMemberJpaRepository.save(ChatMemberEntity.of(id, userId));
     }
+
+    @Override
+    public List<ChatMemberEntity> findAllMemberById(Long roomId) {
+        return chatMemberJpaRepository.findAllByChatRoomId(roomId);
+    }
+
+    @Override
+    public void leave(Long chatRoomId, Long userId) {
+        chatMemberJpaRepository.deleteByChatRoomIdAndUserId(chatRoomId, userId);
+    }
 }
