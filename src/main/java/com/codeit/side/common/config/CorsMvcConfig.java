@@ -12,6 +12,7 @@ public class CorsMvcConfig implements WebMvcConfigurer {
             "https://doitz.netlify.app/",
             "https://calit.netlify.app/",
             "https://www.thunderting.site",
+            "https://thunderting.site",
             "https://thunderting.netlify.app"
     };
     private static final String[] ALLOWED_METHODS = {"GET", "POST", "PUT", "DELETE"};

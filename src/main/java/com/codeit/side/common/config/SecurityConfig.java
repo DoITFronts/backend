@@ -32,6 +32,7 @@ public class SecurityConfig {
             "https://doitz.netlify.app",
             "https://calit.netlify.app",
             "https://www.thunderting.site",
+            "https://thunderting.site",
             "https://thunderting.netlify.app"
     );
     private static final List<String> ALLOWED_METHODS = List.of("GET", "POST", "PUT", "DELETE");
