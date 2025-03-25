@@ -29,11 +29,15 @@ public class SecurityConfig {
     private static final List<String> ALLOWED_ORIGINS = List.of(
             "http://localhost:3000",
             "http://127.0.0.1:5500",
-            "https://doitz.netlify.app",
-            "https://calit.netlify.app",
-            "https://www.thunderting.site",
             "https://thunderting.site",
-            "https://thunderting.netlify.app"
+            "https://doitz.netlify.app",
+            "https://thunderting-doitz.vercel.app",
+            "https://thunderting-one.vercel.app",
+            "https://thunderting-hong.netlify.app",
+            "https://thunderting-one.vercel.app",
+            "https://thundertingdoit.netlify.app",
+            "https://thunderting.netlify.app",
+            "https://www.thunderting-site.com"
     );
     private static final List<String> ALLOWED_METHODS = List.of("GET", "POST", "PUT", "DELETE");
     private static final String[] WHITE_LIST = {

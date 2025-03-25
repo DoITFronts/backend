@@ -9,11 +9,15 @@ public class CorsMvcConfig implements WebMvcConfigurer {
     private static final String[] ALLOWED_ORIGINS = {
             "http://localhost:3000",
             "http://127.0.0.1:5500",
-            "https://doitz.netlify.app/",
-            "https://calit.netlify.app/",
-            "https://www.thunderting.site",
             "https://thunderting.site",
-            "https://thunderting.netlify.app"
+            "https://doitz.netlify.app",
+            "https://thunderting-doitz.vercel.app",
+            "https://thunderting-one.vercel.app",
+            "https://thunderting-hong.netlify.app",
+            "https://thunderting-one.vercel.app",
+            "https://thundertingdoit.netlify.app",
+            "https://thunderting.netlify.app",
+            "https://www.thunderting-site.com",
     };
     private static final String[] ALLOWED_METHODS = {"GET", "POST", "PUT", "DELETE"};
 
