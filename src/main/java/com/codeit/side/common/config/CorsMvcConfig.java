@@ -17,7 +17,7 @@ public class CorsMvcConfig implements WebMvcConfigurer {
             "https://thunderting-one.vercel.app",
             "https://thundertingdoit.netlify.app",
             "https://thunderting.netlify.app",
-            "https://www.thunderting-site.com",
+            "https://www.thunderting-site.com"
     };
     private static final String[] ALLOWED_METHODS = {"GET", "POST", "PUT", "DELETE"};
 
